@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -16,4 +19,12 @@ public class ShoppingCart {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long shoppingCartId;
+
+  @OneToMany(
+    mappedBy = "cart",
+    fetch = FetchType.EAGER,
+    cascade = CascadeType.ALL,
+    orphanRemoval = true
+  )
+  private List<ShoppingCartItem> items = new ArrayList<>();
 }

@@ -1,0 +1,14 @@
+package com.vendora.backend.usecase.request;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class UpdateProviderRequest {
+  private Long providerId;
+  private String name;
+  private String ruc;
+  private String phone;
+  private String email;
+}

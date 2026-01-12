@@ -24,4 +24,8 @@ public class Product {
   private String barCode;
   private Double price;
   private Integer stock;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "provider_id", nullable = false)
+  private Provider provider;
 }

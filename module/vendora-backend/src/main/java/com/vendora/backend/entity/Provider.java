@@ -1,10 +1,7 @@
 package com.vendora.backend.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
@@ -12,6 +9,7 @@ import lombok.Setter;
 @Table(name = "provider")
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Provider {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
