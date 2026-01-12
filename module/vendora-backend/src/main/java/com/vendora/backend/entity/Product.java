@@ -17,6 +17,11 @@ public class Product {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long productId;
 
+  @Enumerated(EnumType.STRING)
+  private ProductStatusType productStatusType;
 
-
+  private String name;
+  private String barCode;
+  private Double price;
+  private Integer stock;
 }

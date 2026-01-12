@@ -9,16 +9,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "provider")
+@Table(name = "shopping_cart_item")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Provider {
+public class ShoppingCartItem {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long providerId;
+  private Long shoppingCartItemId;
 
-  private String name;
-  private String ruc;
-  private String phone;
-  private String email;
+  private Integer quantity;
+  private Double unitPrice;
 }
