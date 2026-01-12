@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: update-trigger
+      author: db.vendora.dev
+      changes:
+        - sql:
+            splitStatements: false
+            stripComments: true
+            dbms: postgresql
+            sql: |
+              CREATE OR REPLACE FUNCTION update_updated_at_column()
+              RETURNS TRIGGER AS $$
+              BEGIN
+                NEW.updated_at = CURRENT_TIMESTAMP;
+                RETURN NEW;
+              END;
+              $$ LANGUAGE plpgsql;

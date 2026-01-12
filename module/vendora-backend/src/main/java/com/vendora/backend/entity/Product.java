@@ -1,0 +1,22 @@
+package com.vendora.backend.entity;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "product")
+@NoArgsConstructor
+@AllArgsConstructor
+public class Product {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long productId;
+
+
+
+}

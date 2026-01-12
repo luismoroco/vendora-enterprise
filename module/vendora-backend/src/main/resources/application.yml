@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: vendora-backend
+    version: 0.0.0
+  datasource:
+    url: jdbc:postgresql://localhost:5432/vendora
+    username: admin
+    password: admin123
+    driver-class-name: org.postgresql.Driver
+  liquibase:
+    enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: off
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        globally_quoted_identifiers: true
+  jackson:
+    deserialization:
+      FAIL_ON_UNKNOWN_PROPERTIES: true
