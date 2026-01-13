@@ -50,3 +50,20 @@ databaseChangeLog:
               BEFORE UPDATE ON brand
               FOR EACH ROW
               EXECUTE FUNCTION update_updated_at_column();
+
+        - addColumn:
+            tableName: product
+            columns:
+              - column:
+                  name: brand_id
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+
+        - addForeignKeyConstraint:
+            baseTableName: product
+            baseColumnNames: brand_id
+            constraintName: fk_product_brand_id_brand
+            referencedTableName: brand
+            referencedColumnNames: brand_id
+            onDelete: SET NULL
