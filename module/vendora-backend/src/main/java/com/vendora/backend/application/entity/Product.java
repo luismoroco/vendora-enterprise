@@ -3,6 +3,8 @@ package com.vendora.backend.application.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @Entity
@@ -27,4 +29,15 @@ public class Product {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "provider_id", nullable = false)
   private Provider provider;
+
+  @ManyToMany(
+    fetch = FetchType.LAZY,
+    cascade = {CascadeType.MERGE, CascadeType.REFRESH}
+  )
+  @JoinTable(
+    name = "product_category_product",
+    joinColumns = @JoinColumn(name = "product_id"),
+    inverseJoinColumns = @JoinColumn(name = "product_category_id")
+  )
+  private Set<ProductCategory> categories;
 }
