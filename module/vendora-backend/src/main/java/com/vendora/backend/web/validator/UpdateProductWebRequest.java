@@ -18,4 +18,5 @@ public class UpdateProductWebRequest implements RequestAdapter<UpdateProductRequ
   private Double price;
   private Integer stock;
   private ProductStatusType productStatusType;
+  private String imageUrl;
 }

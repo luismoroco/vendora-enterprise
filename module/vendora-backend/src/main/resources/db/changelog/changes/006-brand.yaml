@@ -1,0 +1,52 @@
+databaseChangeLog:
+  - changeSet:
+      id: brand
+      author: vendora.dev
+      changes:
+        - createTable:
+            tableName: brand
+            columns:
+              - column:
+                  name: brand_id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: imageUrl
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+        - sql:
+            dbms: postgresql
+            sql: |
+              ALTER TABLE brand
+              ADD CONSTRAINT check_brand_name_length
+                CHECK (char_length(name) > 1) NOT VALID;
+
+        - sql:
+            dbms: postgresql
+            sql: |
+              CREATE TRIGGER update_brand_updated_at
+              BEFORE UPDATE ON brand
+              FOR EACH ROW
+              EXECUTE FUNCTION update_updated_at_column();

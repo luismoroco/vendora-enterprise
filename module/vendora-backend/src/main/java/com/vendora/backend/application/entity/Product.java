@@ -1,6 +1,5 @@
 package com.vendora.backend.application.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,6 +22,7 @@ public class Product {
   private String barCode;
   private Double price;
   private Integer stock;
+  private String imageUrl;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "provider_id", nullable = false)

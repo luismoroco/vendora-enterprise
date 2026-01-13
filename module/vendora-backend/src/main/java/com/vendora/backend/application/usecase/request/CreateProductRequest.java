@@ -15,4 +15,5 @@ public class CreateProductRequest {
   private Double price;
   private Integer stock;
   private Long providerId;
+  private String imageUrl;
 }

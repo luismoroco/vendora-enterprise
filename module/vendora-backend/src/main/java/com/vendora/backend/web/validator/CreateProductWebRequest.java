@@ -14,9 +14,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateProductWebRequest implements RequestAdapter<CreateProductRequest> {
-  @NotBlank private String name;
-  @NotBlank private String barCode;
-  @NotNull  private Double price;
-  @NotNull  private Integer stock;
-  @NotNull  private Long providerId;
+  @NotBlank  private String name;
+  @NotBlank  private String barCode;
+  @NotNull   private Double price;
+  @NotNull   private Integer stock;
+  @NotNull   private Long providerId;
+  @NotBlank  private Long imageUrl;
 }

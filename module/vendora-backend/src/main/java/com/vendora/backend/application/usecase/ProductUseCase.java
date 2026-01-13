@@ -38,6 +38,7 @@ public class ProductUseCase {
         .price(request.getPrice())
         .stock(request.getStock())
         .provider(provider)
+        .imageUrl(request.getImageUrl())
         .build()
     );
   }
@@ -83,6 +84,13 @@ public class ProductUseCase {
         !request.getStock().equals(product.getStock())
     ) {
       product.setStock(request.getStock());
+    }
+
+    if (
+      Objects.nonNull(request.getImageUrl()) &&
+        !request.getImageUrl().equals(product.getImageUrl())
+    ) {
+      product.setImageUrl(request.getImageUrl());
     }
 
     return this.repository.save(product);

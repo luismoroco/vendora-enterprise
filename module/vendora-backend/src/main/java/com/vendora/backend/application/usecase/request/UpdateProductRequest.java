@@ -17,4 +17,5 @@ public class UpdateProductRequest {
   private Double price;
   private Integer stock;
   private ProductStatusType productStatusType;
+  private String imageUrl;
 }
