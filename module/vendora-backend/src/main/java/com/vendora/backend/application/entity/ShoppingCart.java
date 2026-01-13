@@ -22,7 +22,7 @@ public class ShoppingCart {
 
   @OneToMany(
     mappedBy = "cart",
-    fetch = FetchType.EAGER,
+    fetch = FetchType.LAZY,
     cascade = CascadeType.ALL,
     orphanRemoval = true
   )

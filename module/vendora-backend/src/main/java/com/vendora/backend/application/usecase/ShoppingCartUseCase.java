@@ -9,8 +9,6 @@ import com.vendora.backend.application.usecase.request.UpdateShoppingCartRequest
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-
 @Service
 @RequiredArgsConstructor
 public class ShoppingCartUseCase {
@@ -21,23 +19,22 @@ public class ShoppingCartUseCase {
     ShoppingCart shoppingCart = this.repository.findById(request.getShoppingCartId())
       .orElseGet(ShoppingCart::new);
 
-    var items = request.getItems().stream()
-      .map(item -> {
-        Product product = this.productService.findByIdOrThrow(item.getProductId());
-        this.productService.verifyPurchasable(product, item.getQuantity());
+    shoppingCart.getItems().clear();
+    request.getItems().forEach(item -> {
+      Product product = productService.findByIdOrThrow(item.getProductId());
+      productService.verifyPurchasable(product, item.getQuantity());
 
-        return ShoppingCartItem.builder()
+      shoppingCart.getItems().add(
+        ShoppingCartItem.builder()
           .quantity(item.getQuantity())
           .unitPrice(product.getPrice())
           .product(product)
           .cart(shoppingCart)
-          .build();
-      })
-      .toList();
+          .build()
+      );
+    });
 
-    shoppingCart.setItems(new HashSet<>(items));
-
-    return this.repository.save(shoppingCart);
+    return repository.save(shoppingCart);
   }
 
   public ShoppingCart getShoppingCartById(Long shoppingCartId) {
