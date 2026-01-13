@@ -1,4 +1,4 @@
-package com.vendora.backend.entity;
+package com.vendora.backend.application.entity;
 
 public enum ProductStatusType {
   ENABLED,

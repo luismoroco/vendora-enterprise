@@ -19,7 +19,6 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
-        globally_quoted_identifiers: true
   jackson:
     deserialization:
       FAIL_ON_UNKNOWN_PROPERTIES: true

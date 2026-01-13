@@ -1,6 +1,6 @@
-package com.vendora.backend.repository;
+package com.vendora.backend.application.repository;
 
-import com.vendora.backend.entity.Provider;
+import com.vendora.backend.application.entity.Provider;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

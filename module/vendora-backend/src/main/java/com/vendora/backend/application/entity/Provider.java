@@ -1,4 +1,4 @@
-package com.vendora.backend.entity;
+package com.vendora.backend.application.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

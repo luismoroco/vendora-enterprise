@@ -1,13 +1,13 @@
-package com.vendora.backend.usecase;
+package com.vendora.backend.application.usecase;
 
 import com.vendora.backend.common.exc.NotFoundException;
-import com.vendora.backend.entity.Provider;
-import com.vendora.backend.repository.ProviderRepository;
-import com.vendora.backend.usecase.request.CreateProviderRequest;
-import com.vendora.backend.usecase.request.GetProvidersRequest;
-import com.vendora.backend.usecase.request.UpdateProviderRequest;
+import com.vendora.backend.common.exc.BadRequestException;
+import com.vendora.backend.application.entity.Provider;
+import com.vendora.backend.application.repository.ProviderRepository;
+import com.vendora.backend.application.usecase.request.CreateProviderRequest;
+import com.vendora.backend.application.usecase.request.GetProvidersRequest;
+import com.vendora.backend.application.usecase.request.UpdateProviderRequest;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,8 +18,8 @@ import java.util.Objects;
 public class ProviderUseCase {
   private final ProviderRepository repository;
 
-  public Provider createProvider(CreateProviderRequest request) throws BadRequestException {
-    if (this.repository.countAllByRucIn(List.of(request.getRuc())) > 0) {
+  public Provider createProvider(CreateProviderRequest request) {
+    if (this.repository.existsByRuc(request.getRuc())) {
       throw new BadRequestException("RUC already in use");
     }
 
@@ -33,7 +33,7 @@ public class ProviderUseCase {
     );
   }
 
-  public Provider updateProvider(UpdateProviderRequest request) throws NotFoundException, BadRequestException {
+  public Provider updateProvider(UpdateProviderRequest request) {
     Provider provider = this.repository.findById(request.getProviderId())
       .orElseThrow(() -> new NotFoundException("Provider not found"));
 
@@ -69,5 +69,4 @@ public class ProviderUseCase {
     return this.repository.findById(providerId)
       .orElseThrow(() -> new NotFoundException("Provider not found"));
   }
-
 }

@@ -1,4 +1,4 @@
-package com.vendora.backend.entity;
+package com.vendora.backend.application.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -23,4 +23,8 @@ public class ShoppingCartItem {
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "product_id", nullable = false)
   private Product product;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "shopping_cart_id", nullable = false)
+  private ShoppingCart cart;
 }
