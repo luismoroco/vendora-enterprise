@@ -2,11 +2,10 @@ package com.vendora.backend.application.usecase;
 
 import com.vendora.backend.application.entity.Brand;
 import com.vendora.backend.application.repository.BrandRepository;
+import com.vendora.backend.application.service.BrandService;
 import com.vendora.backend.application.usecase.request.CreateBrandRequest;
 import com.vendora.backend.application.usecase.request.GetBrandsRequest;
 import com.vendora.backend.application.usecase.request.UpdateBrandRequest;
-import com.vendora.backend.common.exc.BadRequestException;
-import com.vendora.backend.common.exc.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +16,10 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class BrandUseCase {
   private final BrandRepository repository;
+  private final BrandService service;
 
   public Brand createBrand(CreateBrandRequest request) {
-    if (this.repository.existsByName(request.getName())) {
-      throw new BadRequestException("Brand already exists");
-    }
+    this.service.verifyNameAvailability(request.getName());
 
     return this.repository.save(
       Brand.builder()
@@ -32,13 +30,13 @@ public class BrandUseCase {
   }
 
   public Brand updateBrand(UpdateBrandRequest request) {
-    Brand brand = this.repository.findById(request.getBrandId())
-      .orElseThrow(() -> new NotFoundException("Brand not found"));
+    Brand brand = this.service.findByIdOrThrow(request.getBrandId());
 
     if (
       Objects.nonNull(request.getName()) &&
         !request.getName().equals(brand.getName())
     ) {
+      this.service.verifyNameAvailability(request.getName());
       brand.setName(request.getName());
     }
 
@@ -57,7 +55,6 @@ public class BrandUseCase {
   }
 
   public Brand getBrandById(Long brandId) {
-    return this.repository.findById(brandId)
-      .orElseThrow(() -> new NotFoundException("Brand not found"));
+    return this.service.findByIdOrThrow(brandId);
   }
 }

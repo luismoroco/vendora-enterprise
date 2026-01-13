@@ -21,7 +21,6 @@ import java.util.Objects;
 public class ProductUseCase {
   private final ProductRepository repository;
   private final ProductCategoryRepository productCategoryRepository;
-
   private final ProductService service;
   private final ProviderService providerService;
   private final BrandService brandService;
