@@ -48,6 +48,8 @@ public class ProviderUseCase {
       ) {
         throw new BadRequestException("RUC already in use");
       }
+
+      provider.setRuc(request.getRuc());
     }
 
     if (Objects.nonNull(request.getPhone())) {
