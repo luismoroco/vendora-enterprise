@@ -96,6 +96,13 @@ public class ProductUseCase {
       product.setImageUrl(request.getImageUrl());
     }
 
+    if (
+      Objects.nonNull(request.getProductCategoryIds())
+    ) {
+      List<ProductCategory> categories = this.productCategoryRepository.findAllByProductCategoryIdIn(request.getProductCategoryIds());
+      product.setCategories(new HashSet<>(categories));
+    }
+
     return this.repository.save(product);
   }
 

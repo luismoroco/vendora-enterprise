@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,4 +20,6 @@ public class UpdateProductRequest {
   private Integer stock;
   private ProductStatusType productStatusType;
   private String imageUrl;
+  private Long brandId;
+  private List<Long> productCategoryIds;
 }
