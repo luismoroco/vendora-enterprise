@@ -1,6 +1,6 @@
 package com.vendora.backend.application.usecase;
 
-import com.vendora.backend.common.exc.NotFoundException;
+import com.vendora.backend.application.service.ProviderService;
 import com.vendora.backend.common.exc.BadRequestException;
 import com.vendora.backend.application.entity.Provider;
 import com.vendora.backend.application.repository.ProviderRepository;
@@ -17,6 +17,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class ProviderUseCase {
   private final ProviderRepository repository;
+  private final ProviderService service;
 
   public Provider createProvider(CreateProviderRequest request) {
     if (this.repository.existsByRuc(request.getRuc())) {
@@ -34,8 +35,7 @@ public class ProviderUseCase {
   }
 
   public Provider updateProvider(UpdateProviderRequest request) {
-    Provider provider = this.repository.findById(request.getProviderId())
-      .orElseThrow(() -> new NotFoundException("Provider not found"));
+    Provider provider = this.service.findByIdOrThrow(request.getProviderId());
 
     if (Objects.nonNull(request.getName())) {
       provider.setName(request.getName());
@@ -68,7 +68,6 @@ public class ProviderUseCase {
   }
 
   public Provider getProviderById(Long providerId) {
-    return this.repository.findById(providerId)
-      .orElseThrow(() -> new NotFoundException("Provider not found"));
+    return this.service.findByIdOrThrow(providerId);
   }
 }

@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 @RestController
-@RequestMapping("/api/v1/product-category")
+@RequestMapping("/api/v1/product-categories")
 @RequiredArgsConstructor
 public class ProductCategoryController {
   private final ProductCategoryUseCase useCase;

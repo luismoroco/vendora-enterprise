@@ -13,4 +13,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
   Integer countAllByBarCodeIn(List<String> barCodes);
 
   List<Product> findAllByProductIdIn(List<Long> productIds);
+
+  Integer countAllByNameIn(List<String> names);
 }

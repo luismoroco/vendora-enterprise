@@ -1,18 +1,18 @@
 package com.vendora.backend.application.usecase;
 
-import com.vendora.backend.application.entity.Product;
-import com.vendora.backend.application.entity.ProductStatusType;
-import com.vendora.backend.application.entity.Provider;
+import com.vendora.backend.application.entity.*;
+import com.vendora.backend.application.repository.ProductCategoryRepository;
 import com.vendora.backend.application.repository.ProductRepository;
-import com.vendora.backend.application.repository.ProviderRepository;
+import com.vendora.backend.application.service.BrandService;
+import com.vendora.backend.application.service.ProductService;
+import com.vendora.backend.application.service.ProviderService;
 import com.vendora.backend.application.usecase.request.CreateProductRequest;
 import com.vendora.backend.application.usecase.request.GetProductsRequest;
 import com.vendora.backend.application.usecase.request.UpdateProductRequest;
-import com.vendora.backend.common.exc.NotFoundException;
-import com.vendora.backend.common.exc.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
@@ -20,15 +20,19 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class ProductUseCase {
   private final ProductRepository repository;
-  private final ProviderRepository providerRepository;
+  private final ProductCategoryRepository productCategoryRepository;
+
+  private final ProductService service;
+  private final ProviderService providerService;
+  private final BrandService brandService;
 
   public Product createProduct(CreateProductRequest request) {
-    Provider provider = this.providerRepository.findById(request.getProviderId())
-      .orElseThrow(() -> new NotFoundException("Provider not found"));
+    Provider provider = this.providerService.findByIdOrThrow(request.getProviderId());
+    Brand brand = this.brandService.findByIdOrThrow(request.getBrandId());
+    List<ProductCategory> categories = this.productCategoryRepository.findAllByProductCategoryIdIn(request.getProductCategoryIds());
 
-    if (this.repository.existsByBarCode(request.getBarCode())) {
-      throw new BadRequestException("BarCode already exists");
-    }
+    this.service.verifyBarCodeAvailability(request.getBarCode());
+    this.service.verifyNameAvailability(request.getName());
 
     return this.repository.save(
       Product.builder()
@@ -39,13 +43,14 @@ public class ProductUseCase {
         .stock(request.getStock())
         .provider(provider)
         .imageUrl(request.getImageUrl())
+        .brand(brand)
+        .categories(new HashSet<>(categories))
         .build()
     );
   }
 
   public Product updateProduct(UpdateProductRequest request) {
-    Product product = this.repository.findById(request.getProductId())
-      .orElseThrow(() -> new NotFoundException("Product not found"));
+    Product product = this.service.findByIdOrThrow(request.getProductId());
 
     if (
       Objects.nonNull(request.getProductStatusType()) &&
@@ -58,17 +63,15 @@ public class ProductUseCase {
       Objects.nonNull(request.getName()) &&
         !request.getName().equals(product.getName())
     ) {
+      this.service.verifyNameAvailability(request.getName());
       product.setName(request.getName());
     }
 
-    if (Objects.nonNull(request.getBarCode())) {
-      if (
-        !request.getBarCode().equals(product.getBarCode()) &&
-          this.repository.countAllByBarCodeIn(List.of(request.getBarCode())) > 0
-      ) {
-        throw new BadRequestException("BarCode already in use");
-      }
-
+    if (
+      Objects.nonNull(request.getBarCode()) &&
+        !request.getBarCode().equals(product.getBarCode())
+    ) {
+      this.service.verifyBarCodeAvailability(request.getBarCode());
       product.setBarCode(request.getBarCode());
     }
 
@@ -101,7 +104,6 @@ public class ProductUseCase {
   }
 
   public Product getProductById(Long productId) {
-    return this.repository.findById(productId)
-      .orElseThrow(() -> new NotFoundException("Product not found"));
+    return this.service.findByIdOrThrow(productId);
   }
 }

@@ -18,11 +18,10 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: imageUrl
+                  name: image_url
                   type: VARCHAR(255)
                   constraints:
                     nullable: false
-                    unique: true
               - column:
                   name: created_at
                   type: TIMESTAMP

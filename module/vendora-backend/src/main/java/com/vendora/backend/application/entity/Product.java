@@ -3,6 +3,7 @@ package com.vendora.backend.application.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -39,5 +40,9 @@ public class Product {
     joinColumns = @JoinColumn(name = "product_id"),
     inverseJoinColumns = @JoinColumn(name = "product_category_id")
   )
-  private Set<ProductCategory> categories;
+  private Set<ProductCategory> categories = new HashSet<>();
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "brand_id")
+  private Brand brand;
 }

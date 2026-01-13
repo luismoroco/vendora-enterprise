@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -19,5 +21,7 @@ public class CreateProductWebRequest implements RequestAdapter<CreateProductRequ
   @NotNull   private Double price;
   @NotNull   private Integer stock;
   @NotNull   private Long providerId;
-  @NotBlank  private Long imageUrl;
+  @NotBlank  private String imageUrl;
+  @NotNull   private Long brandId;
+  @NotNull   private List<Long> productCategoryIds;
 }
