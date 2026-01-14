@@ -2,7 +2,7 @@ package com.vendora.backend.application.usecase;
 
 import com.vendora.backend.application.entity.Brand;
 import com.vendora.backend.application.repository.BrandRepository;
-import com.vendora.backend.application.service.BrandService;
+import com.vendora.backend.application.usecase.service.BrandService;
 import com.vendora.backend.application.usecase.request.CreateBrandRequest;
 import com.vendora.backend.application.usecase.request.GetBrandsRequest;
 import com.vendora.backend.application.usecase.request.UpdateBrandRequest;

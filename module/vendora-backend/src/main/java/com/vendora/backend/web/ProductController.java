@@ -8,6 +8,7 @@ import com.vendora.backend.web.validator.GetProductsWebRequest;
 import com.vendora.backend.web.validator.UpdateProductWebRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -56,21 +57,17 @@ public class ProductController {
   }
 
   @GetMapping("")
-  public ResponseEntity<Paginator<Product>> getProducts(@Valid GetProductsWebRequest webRequest) {
+  public ResponseEntity<Page<Product>> findProducts(@Valid GetProductsWebRequest webRequest) {
+    System.out.printf("BRAND_IDS [ids=%s]", webRequest);
+
     return Stream.of(webRequest)
       .map(GetProductsWebRequest::buildRequest)
-      .map(this.useCase::getProducts)
+      .map(this.useCase::findProducts)
       .map(products ->
         ResponseEntity
           .status(HttpStatus.OK)
           .contentType(MediaType.APPLICATION_JSON)
-          .body(
-            Paginator.<Product>builder()
-              .page(PAGE)
-              .size(PAGE_SIZE)
-              .content(products)
-              .build()
-          )
+          .body(products)
       )
       .findFirst()
       .orElseThrow();

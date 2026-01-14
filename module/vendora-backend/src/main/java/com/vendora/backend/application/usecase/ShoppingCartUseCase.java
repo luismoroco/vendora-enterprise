@@ -4,7 +4,7 @@ import com.vendora.backend.application.entity.Product;
 import com.vendora.backend.application.entity.ShoppingCart;
 import com.vendora.backend.application.entity.ShoppingCartItem;
 import com.vendora.backend.application.repository.ShoppingCartRepository;
-import com.vendora.backend.application.service.ProductService;
+import com.vendora.backend.application.usecase.service.ProductService;
 import com.vendora.backend.application.usecase.request.UpdateShoppingCartRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

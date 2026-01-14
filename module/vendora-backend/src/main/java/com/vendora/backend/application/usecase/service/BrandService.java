@@ -1,4 +1,4 @@
-package com.vendora.backend.application.service;
+package com.vendora.backend.application.usecase.service;
 
 import com.vendora.backend.application.entity.Brand;
 import com.vendora.backend.application.repository.BrandRepository;

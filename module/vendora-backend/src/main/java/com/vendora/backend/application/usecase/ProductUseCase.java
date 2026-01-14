@@ -3,13 +3,14 @@ package com.vendora.backend.application.usecase;
 import com.vendora.backend.application.entity.*;
 import com.vendora.backend.application.repository.ProductCategoryRepository;
 import com.vendora.backend.application.repository.ProductRepository;
-import com.vendora.backend.application.service.BrandService;
-import com.vendora.backend.application.service.ProductService;
-import com.vendora.backend.application.service.ProviderService;
+import com.vendora.backend.application.usecase.service.BrandService;
+import com.vendora.backend.application.usecase.service.ProductService;
+import com.vendora.backend.application.usecase.service.ProviderService;
 import com.vendora.backend.application.usecase.request.CreateProductRequest;
 import com.vendora.backend.application.usecase.request.GetProductsRequest;
 import com.vendora.backend.application.usecase.request.UpdateProductRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -105,8 +106,19 @@ public class ProductUseCase {
     return this.repository.save(product);
   }
 
-  public List<Product> getProducts(GetProductsRequest request) {
-    return this.repository.findAllByProductIdIn(request.getProductIds());
+  public Page<Product> findProducts(GetProductsRequest request) {
+    return this.service.find(
+      request.getName(),
+      request.getBarCode(),
+      request.getCategoryIds(),
+      request.getBrandIds(),
+      request.getProviderIds(),
+      request.getProductIds(),
+      request.getMinPrice(),
+      request.getMaxPrice(),
+      request.getPage(),
+      request.getSize()
+    );
   }
 
   public Product getProductById(Long productId) {

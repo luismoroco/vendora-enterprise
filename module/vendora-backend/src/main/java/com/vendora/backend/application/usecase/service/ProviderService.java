@@ -1,4 +1,4 @@
-package com.vendora.backend.application.service;
+package com.vendora.backend.application.usecase.service;
 
 import com.vendora.backend.application.entity.Provider;
 import com.vendora.backend.application.repository.ProviderRepository;

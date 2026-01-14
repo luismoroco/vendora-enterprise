@@ -3,6 +3,7 @@ package com.vendora.backend.application.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -45,4 +46,7 @@ public class Product {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "brand_id")
   private Brand brand;
+
+  private LocalDateTime createdAt;
+  private LocalDateTime updatedAt;
 }

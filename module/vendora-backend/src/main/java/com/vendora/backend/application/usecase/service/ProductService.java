@@ -1,4 +1,4 @@
-package com.vendora.backend.application.service;
+package com.vendora.backend.application.usecase.service;
 
 import com.vendora.backend.application.entity.Product;
 import com.vendora.backend.application.entity.ProductStatusType;
@@ -6,9 +6,13 @@ import com.vendora.backend.application.repository.ProductRepository;
 import com.vendora.backend.common.exc.BadRequestException;
 import com.vendora.backend.common.exc.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -49,5 +53,30 @@ public class ProductService {
           .formatted(product.getName(), product.getStock())
       );
     }
+  }
+
+  public Page<Product> find(
+    String name,
+    String barCode,
+    List<Long> categoryIds,
+    List<Long> brandIds,
+    List<Long> providerIds,
+    List<Long> productIds,
+    Double minPrice,
+    Double maxPrice,
+    Integer page,
+    Integer size
+  ) {
+    return this.repository.find(
+      Objects.isNull(name) ? "" : name,
+      barCode,
+      categoryIds,
+      brandIds,
+      providerIds,
+      productIds,
+      minPrice,
+      maxPrice,
+      PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "updatedAt"))
+    );
   }
 }
