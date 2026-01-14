@@ -1,6 +1,5 @@
 package com.vendora.backend.application.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,7 +18,7 @@ public class ShoppingCartItem {
   private Integer quantity;
   private Double unitPrice;
 
-  @ManyToOne(fetch = FetchType.EAGER)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "product_id", nullable = false)
   private Product product;
 

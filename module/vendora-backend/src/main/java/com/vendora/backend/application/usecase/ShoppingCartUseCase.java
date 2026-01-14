@@ -21,8 +21,8 @@ public class ShoppingCartUseCase {
 
     shoppingCart.getItems().clear();
     request.getItems().forEach(item -> {
-      Product product = productService.findByIdOrThrow(item.getProductId());
-      productService.verifyPurchasable(product, item.getQuantity());
+      Product product = this.productService.findByIdOrThrow(item.getProductId());
+      this.productService.verifyPurchasable(product, item.getQuantity());
 
       shoppingCart.getItems().add(
         ShoppingCartItem.builder()
