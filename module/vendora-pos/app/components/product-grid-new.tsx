@@ -172,9 +172,9 @@ export default function ProductGridNew({ categoryIds, searchQuery, onAddToCart }
                 ) : (
                   <div className="flex items-center gap-1">
                     <Button
-                      size="icon"
+                      size="sm"
                       variant="secondary"
-                      className="h-7 w-7 bg-red-500 hover:bg-red-600 text-white"
+                      className="h-7 flex-1 bg-red-500 hover:bg-red-600 text-white px-2"
                       onClick={() => handleQuantityChange(product.productId, cartQuantity - 1)}
                     >
                       <Minus className="h-3 w-3" />
@@ -184,12 +184,12 @@ export default function ProductGridNew({ categoryIds, searchQuery, onAddToCart }
                       min="0"
                       value={cartQuantity}
                       onChange={(e) => handleQuantityChange(product.productId, parseInt(e.target.value) || 0)}
-                      className="h-7 text-center text-xs font-semibold px-1 bg-white"
+                      className="h-7 w-12 text-center text-xs font-semibold px-1 bg-white"
                     />
                     <Button
-                      size="icon"
+                      size="sm"
                       variant="secondary"
-                      className="h-7 w-7 bg-green-500 hover:bg-green-600 text-white"
+                      className="h-7 flex-1 bg-green-500 hover:bg-green-600 text-white px-2"
                       onClick={() => handleAddToCart(product)}
                       disabled={isDisabled}
                     >

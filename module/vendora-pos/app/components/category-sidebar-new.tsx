@@ -39,9 +39,12 @@ export default function CategorySidebarNew({ selectedCategoryIds, onSelectCatego
   const isAllSelected = selectedCategoryIds.length === 0
 
   return (
-    <div className="w-56 border-r bg-background p-4">
-      <h2 className="mb-4 text-lg font-semibold">Categories</h2>
-      <div className="grid gap-3">
+    <div className="w-56 border-r bg-background flex flex-col h-screen">
+      <div className="p-4 border-b">
+        <h2 className="text-lg font-semibold">Categories</h2>
+      </div>
+      <div className="flex-1 overflow-y-auto p-4">
+        <div className="grid gap-3">
         {/* All Products Button */}
         <Button
           variant="ghost"
@@ -96,6 +99,7 @@ export default function CategorySidebarNew({ selectedCategoryIds, onSelectCatego
             )
           })
         )}
+        </div>
       </div>
     </div>
   )

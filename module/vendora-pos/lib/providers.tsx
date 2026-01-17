@@ -12,13 +12,15 @@ export function Providers({ children }: { children: React.ReactNode }) {
         position="top-center"
         toastOptions={{
           classNames: {
-            error: 'bg-red-500 text-white border-red-600',
-            success: 'bg-green-500 text-white border-green-600',
-            warning: 'bg-yellow-500 text-white border-yellow-600',
-            info: 'bg-blue-500 text-white border-blue-600',
+            toast: 'text-white font-medium',
+            error: '!bg-red-500 !text-white border-0',
+            success: '!bg-green-500 !text-white border-0',
+            warning: '!bg-yellow-500 !text-white border-0',
+            info: '!bg-blue-500 !text-white border-0',
+            title: '!text-white',
+            description: '!text-white/90',
           },
         }}
-        richColors
       />
     </Provider>
   );
