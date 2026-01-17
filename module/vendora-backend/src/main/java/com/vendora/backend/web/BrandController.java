@@ -41,7 +41,7 @@ public class BrandController {
   @PutMapping("/{brandId}")
   public ResponseEntity<Brand> updateBrand(@Valid @RequestBody UpdateBrandWebRequest webRequest, @PathVariable Long brandId) {
     return Stream.of(webRequest)
-      .map(request -> request.buildRequest(Map.of("brandIds", brandId)))
+      .map(request -> request.buildRequest(Map.of("brandId", brandId)))
       .map(this.useCase::updateBrand)
       .map(brand ->
         ResponseEntity
