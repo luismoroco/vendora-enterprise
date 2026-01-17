@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
 import { providerService } from "@/lib/services/providerService"
 import type { Provider } from "@/lib/types"
+import ImageUpload from "./image-upload"
 
 interface ProviderFormDialogProps {
   open: boolean
@@ -26,6 +27,7 @@ export default function ProviderFormDialog({
   const [ruc, setRuc] = useState("")
   const [phone, setPhone] = useState("")
   const [email, setEmail] = useState("")
+  const [imageUrl, setImageUrl] = useState("")
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
@@ -34,11 +36,13 @@ export default function ProviderFormDialog({
       setRuc(provider.ruc)
       setPhone(provider.phone || "")
       setEmail(provider.email || "")
+      setImageUrl(provider.imageUrl || "")
     } else {
       setName("")
       setRuc("")
       setPhone("")
       setEmail("")
+      setImageUrl("")
     }
   }, [provider])
 
@@ -60,6 +64,7 @@ export default function ProviderFormDialog({
           ruc: ruc.trim(),
           phone: phone.trim() || undefined,
           email: email.trim() || undefined,
+          imageUrl: imageUrl.trim() || undefined,
         })
         toast.success("Provider updated successfully")
       } else {
@@ -69,6 +74,7 @@ export default function ProviderFormDialog({
           ruc: ruc.trim(),
           phone: phone.trim(),
           email: email.trim(),
+          imageUrl: imageUrl.trim(),
         })
         toast.success("Provider created successfully")
       }
@@ -132,6 +138,13 @@ export default function ProviderFormDialog({
               placeholder="Enter email"
             />
           </div>
+
+          <ImageUpload
+            label="Provider Image"
+            value={imageUrl}
+            onChange={setImageUrl}
+            disabled={loading}
+          />
 
           <div className="flex justify-end gap-2 pt-4">
             <Button

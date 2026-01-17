@@ -19,4 +19,5 @@ public class UpdateProviderWebRequest implements RequestAdapter<UpdateProviderRe
   @Pattern(regexp = "\\d{11}")   private String ruc;
   @Pattern(regexp = "\\d{7,15}") private String phone;
   @Email                         private String email;
+  private String imageUrl;
 }

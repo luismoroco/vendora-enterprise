@@ -43,6 +43,7 @@ export interface Provider {
   ruc: string;
   phone: string;
   email: string;
+  imageUrl: string;
 }
 
 // Request Types
@@ -126,6 +127,7 @@ export interface CreateProviderRequest {
   ruc: string;
   phone: string;
   email: string;
+  imageUrl: string;
 }
 
 export interface UpdateProviderRequest {
@@ -133,6 +135,7 @@ export interface UpdateProviderRequest {
   ruc?: string;
   phone?: string;
   email?: string;
+  imageUrl?: string;
 }
 
 // Cart Types

@@ -15,4 +15,5 @@ public class UpdateProviderRequest {
   private String ruc;
   private String phone;
   private String email;
+  private String imageUrl;
 }
