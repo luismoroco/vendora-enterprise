@@ -14,6 +14,7 @@ import { categoryService } from "@/lib/services/categoryService"
 import { providerService } from "@/lib/services/providerService"
 import type { Product, Brand, ProductCategory, Provider } from "@/lib/types"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import ImageUpload from "./image-upload"
 
 interface ProductFormDialogProps {
   open: boolean
@@ -218,15 +219,12 @@ export default function ProductFormDialog({
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="imageUrl">Image URL</Label>
-              <Input
-                id="imageUrl"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                placeholder="Enter image URL"
-              />
-            </div>
+            <ImageUpload
+              label="Product Image"
+              value={imageUrl}
+              onChange={setImageUrl}
+              disabled={loading || loadingData}
+            />
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">

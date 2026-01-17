@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
 import { brandService } from "@/lib/services/brandService"
 import type { Brand } from "@/lib/types"
+import ImageUpload from "./image-upload"
 
 interface BrandFormDialogProps {
   open: boolean
@@ -86,15 +87,12 @@ export default function BrandFormDialog({ open, onOpenChange, brand, onSuccess }
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="imageUrl">Image URL</Label>
-            <Input
-              id="imageUrl"
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
-              placeholder="Enter image URL"
-            />
-          </div>
+          <ImageUpload
+            label="Brand Image"
+            value={imageUrl}
+            onChange={setImageUrl}
+            disabled={loading}
+          />
 
           <div className="flex justify-end gap-2 pt-4">
             <Button

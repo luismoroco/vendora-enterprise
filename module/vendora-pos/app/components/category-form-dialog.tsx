@@ -9,6 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { toast } from "sonner"
 import { categoryService } from "@/lib/services/categoryService"
 import type { ProductCategory } from "@/lib/types"
+import ImageUpload from "./image-upload"
 
 interface CategoryFormDialogProps {
   open: boolean
@@ -97,15 +98,12 @@ export default function CategoryFormDialog({
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="imageUrl">Image URL</Label>
-            <Input
-              id="imageUrl"
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
-              placeholder="Enter image URL"
-            />
-          </div>
+          <ImageUpload
+            label="Category Image"
+            value={imageUrl}
+            onChange={setImageUrl}
+            disabled={loading}
+          />
 
           <div className="flex items-center space-x-2">
             <Checkbox

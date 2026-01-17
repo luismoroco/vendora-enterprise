@@ -22,6 +22,17 @@ spring:
   jackson:
     deserialization:
       FAIL_ON_UNKNOWN_PROPERTIES: true
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+app:
+  upload:
+    dir: uploads/images
+  base:
+    url: http://localhost:8080
 logging:
   level:
     root: INFO
