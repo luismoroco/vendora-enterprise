@@ -17,4 +17,5 @@ public class CreateProviderWebRequest implements RequestAdapter<CreateProviderRe
   @NotBlank private String ruc;
   @NotBlank private String phone;
   @NotBlank private String email;
+  private String imageUrl;
 }

@@ -1,23 +1,18 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Plus, Pencil, Search } from "lucide-react"
+import { Plus, Eye, Search, Star } from "lucide-react"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
+import { Card, CardContent } from "@/components/ui/card"
 import { toast } from "sonner"
 import { categoryService } from "@/lib/services/categoryService"
 import type { ProductCategory } from "@/lib/types"
 import MainSidebar from "../components/main-sidebar"
 import CategoryFormDialog from "../components/category-form-dialog"
+import CategoryDetailModal from "../components/category-detail-modal"
 
 export default function CategoriesPage() {
   const [categories, setCategories] = useState<ProductCategory[]>([])
@@ -26,6 +21,7 @@ export default function CategoriesPage() {
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [detailModalOpen, setDetailModalOpen] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<ProductCategory | null>(null)
 
   const fetchCategories = async () => {
@@ -50,9 +46,9 @@ export default function CategoriesPage() {
     fetchCategories()
   }, [page, searchQuery])
 
-  const handleEdit = (category: ProductCategory) => {
+  const handleCategoryClick = (category: ProductCategory) => {
     setSelectedCategory(category)
-    setDialogOpen(true)
+    setDetailModalOpen(true)
   }
 
   const handleAdd = () => {
@@ -63,6 +59,7 @@ export default function CategoriesPage() {
   const handleSuccess = () => {
     fetchCategories()
     setDialogOpen(false)
+    setDetailModalOpen(false)
   }
 
   return (
@@ -91,60 +88,63 @@ export default function CategoriesPage() {
         </div>
 
         <div className="flex-1 overflow-auto p-6">
-          <div className="border rounded-lg">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-20">ID</TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Image URL</TableHead>
-                  <TableHead className="w-32">Featured</TableHead>
-                  <TableHead className="w-32 text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {loading && categories.length === 0 ? (
-                  Array.from({ length: 5 }).map((_, i) => (
-                    <TableRow key={i}>
-                      <TableCell><div className="h-4 bg-muted rounded animate-pulse" /></TableCell>
-                      <TableCell><div className="h-4 bg-muted rounded animate-pulse" /></TableCell>
-                      <TableCell><div className="h-4 bg-muted rounded animate-pulse" /></TableCell>
-                      <TableCell><div className="h-4 bg-muted rounded animate-pulse" /></TableCell>
-                      <TableCell><div className="h-4 bg-muted rounded animate-pulse" /></TableCell>
-                    </TableRow>
-                  ))
-                ) : categories.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
-                      No categories found
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  categories.map((category) => (
-                    <TableRow key={category.productCategoryId}>
-                      <TableCell className="font-medium">{category.productCategoryId}</TableCell>
-                      <TableCell>{category.name}</TableCell>
-                      <TableCell className="max-w-md truncate">{category.imageUrl || "-"}</TableCell>
-                      <TableCell>
-                        <Badge variant={category.featured ? "default" : "secondary"}>
-                          {category.featured ? "Yes" : "No"}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleEdit(category)}
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </div>
+          {loading && categories.length === 0 ? (
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
+              {Array.from({ length: 10 }).map((_, i) => (
+                <Card key={i} className="overflow-hidden animate-pulse">
+                  <div className="aspect-square bg-muted" />
+                  <CardContent className="p-3">
+                    <div className="h-4 bg-muted rounded mb-2" />
+                    <div className="h-3 bg-muted rounded w-1/2" />
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : categories.length === 0 ? (
+            <div className="py-12 text-center">
+              <p className="text-muted-foreground">No categories found</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
+              {categories.map((category) => (
+                <Card
+                  key={category.productCategoryId}
+                  className="overflow-hidden transition-all duration-200 hover:shadow-md cursor-pointer group relative"
+                  onClick={() => handleCategoryClick(category)}
+                >
+                  <div className="relative aspect-square">
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity group-hover:opacity-100 z-10">
+                      <Button
+                        size="icon"
+                        variant="secondary"
+                        className="h-10 w-10"
+                      >
+                        <Eye className="h-5 w-5" />
+                      </Button>
+                    </div>
+                    <Image
+                      src={category.imageUrl || "/placeholder.svg"}
+                      alt={category.name}
+                      fill
+                      className="object-cover"
+                    />
+                    {category.featured && (
+                      <div className="absolute top-2 right-2 bg-primary text-primary-foreground px-2 py-1 rounded text-xs font-semibold flex items-center gap-1">
+                        <Star className="h-3 w-3" />
+                        Featured
+                      </div>
+                    )}
+                  </div>
+                  <CardContent className="p-3">
+                    <div>
+                      <h3 className="font-medium line-clamp-1">{category.name}</h3>
+                      <p className="text-xs text-muted-foreground">ID: {category.productCategoryId}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
 
           {/* Pagination */}
           {totalPages > 1 && (
@@ -175,6 +175,13 @@ export default function CategoriesPage() {
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         category={selectedCategory}
+        onSuccess={handleSuccess}
+      />
+
+      <CategoryDetailModal
+        category={selectedCategory}
+        open={detailModalOpen}
+        onOpenChange={setDetailModalOpen}
         onSuccess={handleSuccess}
       />
     </div>

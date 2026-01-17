@@ -57,7 +57,7 @@ export default function MainSidebar() {
               variant="ghost"
               size="icon"
               className={cn(
-                "h-14 w-14 flex flex-col items-center justify-center gap-1",
+                "h-12 w-12",
                 isActive
                   ? "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground"
                   : "hover:bg-muted"
@@ -65,7 +65,6 @@ export default function MainSidebar() {
               title={item.label}
             >
               <Icon className="h-6 w-6" />
-              <span className="text-[10px] font-medium">{item.label}</span>
             </Button>
           </Link>
         )
