@@ -83,16 +83,17 @@ export default function CategorySidebarNew({ selectedCategoryIds, onSelectCatego
                 onClick={() => onSelectCategory([category.productCategoryId])}
               >
                 {category.imageUrl ? (
-                  <div className="mb-2 h-12 w-12 relative rounded overflow-hidden">
+                  <div className="mb-3 h-28 w-28 relative rounded-xl overflow-hidden">
                     <Image
                       src={category.imageUrl}
                       alt={category.name}
                       fill
                       className="object-cover"
+                      sizes="112px"
                     />
                   </div>
                 ) : (
-                  <LayoutGrid className="mb-2 h-12 w-12 p-2 bg-muted rounded" />
+                  <LayoutGrid className="mb-3 h-28 w-28 p-6 bg-muted rounded-xl" />
                 )}
                 <span className="text-xs text-center line-clamp-2">{category.name}</span>
               </Button>
