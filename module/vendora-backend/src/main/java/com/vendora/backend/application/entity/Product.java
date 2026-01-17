@@ -29,6 +29,8 @@ public class Product {
   private Double price;
   private Integer stock;
   private String imageUrl;
+  private Double cost;
+  private String description;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "provider_id", nullable = false)
