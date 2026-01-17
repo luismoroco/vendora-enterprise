@@ -8,7 +8,9 @@
     "lint": "eslint .",
     "start": "next start",
     "dev:electron": "wait-on http://localhost:3000 && electron electron/main.js",
-    "dev:desktop": "concurrently \"npm run dev\" \"npm run dev:electron\""
+    "dev:desktop": "concurrently \"npm run dev\" \"npm run dev:electron\"",
+    "start:electron": "wait-on http://localhost:3000 && electron electron/main.js",
+    "start:desktop": "npm run build && concurrently \"npm run start\" \"npm run start:electron\""
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
