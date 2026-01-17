@@ -22,4 +22,5 @@ public class UpdateProductRequest {
   private String imageUrl;
   private Long brandId;
   private List<Long> productCategoryIds;
+  private Long providerId;
 }

@@ -23,4 +23,5 @@ public class UpdateProductWebRequest implements RequestAdapter<UpdateProductRequ
   private String imageUrl;
   private Long brandId;
   private List<Long> productCategoryIds;
+  private Long providerId;
 }
