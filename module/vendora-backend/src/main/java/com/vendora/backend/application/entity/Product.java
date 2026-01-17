@@ -2,6 +2,8 @@ package com.vendora.backend.application.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -47,6 +49,10 @@ public class Product {
   @JoinColumn(name = "brand_id")
   private Brand brand;
 
+  @CreationTimestamp
+  @Column(updatable = false)
   private LocalDateTime createdAt;
+
+  @UpdateTimestamp
   private LocalDateTime updatedAt;
 }

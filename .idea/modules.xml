@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/vendora.iml" filepath="$PROJECT_DIR$/vendora.iml" />
+      <module fileurl="file://$PROJECT_DIR$/module/vendora-backend/vendora-backend.iml" filepath="$PROJECT_DIR$/module/vendora-backend/vendora-backend.iml" />
     </modules>
   </component>
 </project>

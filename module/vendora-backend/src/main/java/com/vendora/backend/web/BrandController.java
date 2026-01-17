@@ -2,10 +2,10 @@ package com.vendora.backend.web;
 
 import com.vendora.backend.application.entity.Brand;
 import com.vendora.backend.application.usecase.BrandUseCase;
-import com.vendora.backend.common.web.api.Paginator;
 import com.vendora.backend.web.validator.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +41,7 @@ public class BrandController {
   @PutMapping("/{brandId}")
   public ResponseEntity<Brand> updateBrand(@Valid @RequestBody UpdateBrandWebRequest webRequest, @PathVariable Long brandId) {
     return Stream.of(webRequest)
-      .map(request -> request.buildRequest(Map.of("brandIds", brandId)))
+      .map(request -> request.buildRequest(Map.of("brandId", brandId)))
       .map(this.useCase::updateBrand)
       .map(brand ->
         ResponseEntity
@@ -54,7 +54,7 @@ public class BrandController {
   }
 
   @GetMapping("")
-  public ResponseEntity<Paginator<Brand>> getBrands(@Valid GetBrandsWebRequest webRequest) {
+  public ResponseEntity<Page<Brand>> getBrands(@Valid GetBrandsWebRequest webRequest) {
     return Stream.of(webRequest)
       .map(GetBrandsWebRequest::buildRequest)
       .map(this.useCase::getBrands)
@@ -62,13 +62,7 @@ public class BrandController {
         ResponseEntity
           .status(HttpStatus.OK)
           .contentType(MediaType.APPLICATION_JSON)
-          .body(
-            Paginator.<Brand>builder()
-              .page(PAGE)
-              .size(PAGE_SIZE)
-              .content(brands)
-              .build()
-          )
+          .body(brands)
       )
       .findFirst()
       .orElseThrow();

@@ -12,5 +12,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GetBrandsRequest {
+  private String name;
   private List<Long> brandIds;
+  private Integer page;
+  private Integer size;
 }

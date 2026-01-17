@@ -12,5 +12,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GetProductCategoriesRequest {
+  private String name;
   private List<Long> productCategoryIds;
+  private Integer page;
+  private Integer size;
 }

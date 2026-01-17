@@ -3,17 +3,36 @@
 import { useState } from "react"
 import { Search } from "lucide-react"
 import { Input } from "@/components/ui/input"
-import ProductGrid from "./components/product-grid"
+import ProductGridNew from "./components/product-grid-new"
 import CartSidebar from "./components/cart-sidebar"
-import CategorySidebar from "./components/category-sidebar"
+import CategorySidebarNew from "./components/category-sidebar-new"
+import MainSidebar from "./components/main-sidebar"
+import { useCart } from "./context/cart-context"
+import type { Product } from "@/lib/types"
 
 export default function POSPage() {
   const [searchQuery, setSearchQuery] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState("all")
+  const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([])
+  const { addToCart } = useCart()
+
+  const handleAddToCart = (product: Product) => {
+    // Convert Product to the cart context format
+    addToCart({
+      id: product.productId,
+      name: product.name,
+      price: product.price,
+      image: product.imageUrl,
+      category: product.categories[0]?.name || "",
+    })
+  }
 
   return (
     <div className="flex h-screen bg-background">
-      <CategorySidebar selectedCategory={selectedCategory} onSelectCategory={setSelectedCategory} />
+      <MainSidebar />
+      <CategorySidebarNew
+        selectedCategoryIds={selectedCategoryIds}
+        onSelectCategory={setSelectedCategoryIds}
+      />
 
       <main className="flex-1 flex flex-col h-screen overflow-hidden">
         <div className="sticky top-0 z-10 bg-background p-4 border-b">
@@ -32,7 +51,11 @@ export default function POSPage() {
         </div>
 
         <div className="flex-1 overflow-auto p-4">
-          <ProductGrid category={selectedCategory} searchQuery={searchQuery} />
+          <ProductGridNew
+            categoryIds={selectedCategoryIds}
+            searchQuery={searchQuery}
+            onAddToCart={handleAddToCart}
+          />
         </div>
       </main>
 

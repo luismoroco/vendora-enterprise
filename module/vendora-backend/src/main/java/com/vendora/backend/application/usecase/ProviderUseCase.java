@@ -8,6 +8,9 @@ import com.vendora.backend.application.usecase.request.CreateProviderRequest;
 import com.vendora.backend.application.usecase.request.GetProvidersRequest;
 import com.vendora.backend.application.usecase.request.UpdateProviderRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -63,8 +66,12 @@ public class ProviderUseCase {
     return this.repository.save(provider);
   }
 
-  public List<Provider> getProviders(GetProvidersRequest request) {
-    return this.repository.findAllByProviderIdIn(request.getProviderIds());
+  public Page<Provider> getProviders(GetProvidersRequest request) {
+    return this.repository.find(
+      Objects.isNull(request.getName()) ? "" : request.getName(),
+      request.getProviderIds(),
+      PageRequest.of(request.getPage() - 1, request.getSize(), Sort.by(Sort.Direction.ASC, "updatedAt"))
+    );
   }
 
   public Provider getProviderById(Long providerId) {
