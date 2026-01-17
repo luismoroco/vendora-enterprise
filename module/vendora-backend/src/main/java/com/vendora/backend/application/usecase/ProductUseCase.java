@@ -45,6 +45,8 @@ public class ProductUseCase {
         .imageUrl(request.getImageUrl())
         .brand(brand)
         .categories(new HashSet<>(categories))
+        .cost(request.getCost())
+        .description(request.getDescription())
         .build()
     );
   }
@@ -101,6 +103,20 @@ public class ProductUseCase {
     ) {
       List<ProductCategory> categories = this.productCategoryRepository.findAllByProductCategoryIdIn(request.getProductCategoryIds());
       product.setCategories(new HashSet<>(categories));
+    }
+
+    if (
+      Objects.nonNull(request.getCost()) &&
+        !request.getCost().equals(product.getCost())
+    ) {
+      product.setCost(request.getCost());
+    }
+
+    if (
+      Objects.nonNull(request.getDescription()) &&
+        !request.getDescription().equals(product.getDescription())
+    ) {
+      product.setDescription(request.getDescription());
     }
 
     return this.repository.save(product);

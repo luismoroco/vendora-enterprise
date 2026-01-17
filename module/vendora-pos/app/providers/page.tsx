@@ -108,7 +108,7 @@ export default function ProvidersPage() {
               {providers.map((provider) => (
                 <Card
                   key={provider.providerId}
-                  className="overflow-hidden transition-all duration-200 hover:shadow-md cursor-pointer group relative"
+                  className="overflow-hidden transition-all duration-200 hover:shadow-md cursor-pointer group relative bg-gray-50"
                   onClick={() => handleProviderClick(provider)}
                 >
                   <div className="relative aspect-square">

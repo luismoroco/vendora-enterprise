@@ -16,6 +16,8 @@ export interface Product {
   price: number;
   stock: number;
   imageUrl: string;
+  cost: number;
+  description: string;
   productStatusType: 'ENABLED' | 'DISABLED';
   provider: Provider;
   brand: Brand;
@@ -85,6 +87,8 @@ export interface CreateProductRequest {
   price: number;
   stock: number;
   imageUrl: string;
+  cost: number;
+  description: string;
   providerId: number;
   brandId: number;
   productCategoryIds: number[];
@@ -96,7 +100,11 @@ export interface UpdateProductRequest {
   price?: number;
   stock?: number;
   imageUrl?: string;
+  cost?: number;
+  description?: string;
   productStatusType?: 'ENABLED' | 'DISABLED';
+  brandId?: number;
+  providerId?: number;
   productCategoryIds?: number[];
 }
 

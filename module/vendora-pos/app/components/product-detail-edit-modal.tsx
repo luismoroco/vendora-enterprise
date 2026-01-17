@@ -14,8 +14,11 @@ import { Package, DollarSign, Tag, Building2 } from "lucide-react"
 import { toast } from "sonner"
 import { productService } from "@/lib/services/productService"
 import { categoryService } from "@/lib/services/categoryService"
-import type { Product, ProductCategory } from "@/lib/types"
+import { brandService } from "@/lib/services/brandService"
+import { providerService } from "@/lib/services/providerService"
+import type { Product, ProductCategory, Brand, Provider } from "@/lib/types"
 import ImageUpload from "./image-upload"
+import { Textarea } from "@/components/ui/textarea"
 
 interface ProductDetailEditModalProps {
   product: Product | null
@@ -34,30 +37,42 @@ export default function ProductDetailEditModal({
   const [name, setName] = useState("")
   const [barCode, setBarCode] = useState("")
   const [price, setPrice] = useState("")
+  const [cost, setCost] = useState("")
   const [stock, setStock] = useState("")
   const [imageUrl, setImageUrl] = useState("")
+  const [description, setDescription] = useState("")
   const [productStatusType, setProductStatusType] = useState<"ENABLED" | "DISABLED">("ENABLED")
+  const [brandId, setBrandId] = useState<number | null>(null)
+  const [providerId, setProviderId] = useState<number | null>(null)
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([])
   const [categories, setCategories] = useState<ProductCategory[]>([])
+  const [brands, setBrands] = useState<Brand[]>([])
+  const [providers, setProviders] = useState<Provider[]>([])
   const [loading, setLoading] = useState(false)
   const [loadingData, setLoadingData] = useState(true)
 
   useEffect(() => {
-    const loadCategories = async () => {
+    const loadData = async () => {
       try {
         setLoadingData(true)
-        const categoriesRes = await categoryService.getCategories({ page: 1, size: 100 })
+        const [categoriesRes, brandsRes, providersRes] = await Promise.all([
+          categoryService.getCategories({ page: 1, size: 100 }),
+          brandService.getBrands({ page: 1, size: 100 }),
+          providerService.getProviders({ page: 1, size: 100 }),
+        ])
         setCategories(categoriesRes.content)
+        setBrands(brandsRes.content)
+        setProviders(providersRes.content)
       } catch (error) {
-        toast.error("Failed to load categories")
-        console.error("Error loading categories:", error)
+        toast.error("Failed to load data")
+        console.error("Error loading data:", error)
       } finally {
         setLoadingData(false)
       }
     }
 
     if (open) {
-      loadCategories()
+      loadData()
     }
   }, [open])
 
@@ -66,9 +81,13 @@ export default function ProductDetailEditModal({
       setName(product.name)
       setBarCode(product.barCode)
       setPrice(product.price.toString())
+      setCost(product.cost?.toString() || "0")
       setStock(product.stock.toString())
       setImageUrl(product.imageUrl || "")
+      setDescription(product.description || "")
       setProductStatusType(product.productStatusType)
+      setBrandId(product.brand.brandId)
+      setProviderId(product.provider.providerId)
       setSelectedCategoryIds(product.categories.map((c) => c.productCategoryId))
       setIsEditing(false)
     }
@@ -85,7 +104,7 @@ export default function ProductDetailEditModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!name.trim() || !barCode.trim() || !price || !stock) {
+    if (!name.trim() || !barCode.trim() || !price || !stock || !cost) {
       toast.error("Please fill in all required fields")
       return
     }
@@ -95,7 +114,7 @@ export default function ProductDetailEditModal({
       return
     }
 
-    if (!product) return
+    if (!product || !brandId || !providerId) return
 
     try {
       setLoading(true)
@@ -103,8 +122,12 @@ export default function ProductDetailEditModal({
         name: name.trim(),
         barCode: barCode.trim(),
         price: parseFloat(price),
+        cost: parseFloat(cost),
         stock: parseInt(stock),
         imageUrl: imageUrl.trim() || undefined,
+        description: description.trim() || undefined,
+        brandId,
+        providerId,
         productCategoryIds: selectedCategoryIds,
         productStatusType,
       })
@@ -145,14 +168,33 @@ export default function ProductDetailEditModal({
 
             {/* Product Details */}
             <div className="flex flex-col gap-4">
-              <div className="flex items-center gap-2">
-                <DollarSign className="h-5 w-5 text-muted-foreground" />
-                <span className="text-3xl font-bold">${product.price.toFixed(2)}</span>
-              </div>
-
               <div>
                 <Label className="text-muted-foreground">Product ID</Label>
                 <p className="text-lg font-semibold">{product.productId}</p>
+              </div>
+
+              <div className="border-l-4 border-green-500 pl-4 bg-green-50 p-3 rounded">
+                <div className="flex items-center gap-2 mb-2">
+                  <DollarSign className="h-5 w-5 text-green-600" />
+                  <span className="text-sm text-muted-foreground">Sale Price</span>
+                </div>
+                <span className="text-3xl font-bold text-green-600">${product.price.toFixed(2)}</span>
+                
+                {product.cost > 0 && (
+                  <>
+                    <div className="mt-3 space-y-1">
+                      <p className="text-sm text-muted-foreground">
+                        Cost: <span className="font-semibold text-gray-700">${product.cost.toFixed(2)}</span>
+                      </p>
+                      <p className="text-sm font-semibold text-green-700">
+                        Profit: ${(product.price - product.cost).toFixed(2)} 
+                        <span className="text-xs ml-1">
+                          ({(((product.price - product.cost) / product.cost) * 100).toFixed(1)}%)
+                        </span>
+                      </p>
+                    </div>
+                  </>
+                )}
               </div>
 
               <div className="flex items-center gap-2">
@@ -194,6 +236,13 @@ export default function ProductDetailEditModal({
                   Provider: <span className="font-semibold">{product.provider.name}</span>
                 </span>
               </div>
+
+              {product.description && (
+                <div>
+                  <Label className="text-muted-foreground">Description</Label>
+                  <p className="text-sm mt-1">{product.description}</p>
+                </div>
+              )}
 
               {product.categories && product.categories.length > 0 && (
                 <div className="space-y-2">
@@ -246,7 +295,7 @@ export default function ProductDetailEditModal({
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="price">Price *</Label>
+                  <Label htmlFor="price">Sale Price *</Label>
                   <Input
                     id="price"
                     type="number"
@@ -260,6 +309,22 @@ export default function ProductDetailEditModal({
                 </div>
 
                 <div className="space-y-2">
+                  <Label htmlFor="cost">Cost *</Label>
+                  <Input
+                    id="cost"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={cost}
+                    onChange={(e) => setCost(e.target.value)}
+                    placeholder="0.00"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
                   <Label htmlFor="stock">Stock *</Label>
                   <Input
                     id="stock"
@@ -271,6 +336,15 @@ export default function ProductDetailEditModal({
                     required
                   />
                 </div>
+
+                <div className="space-y-2">
+                  <Label className="text-muted-foreground">Profit (Calculated)</Label>
+                  <div className="flex items-center h-10 px-3 rounded-md border bg-muted">
+                    <span className="font-semibold text-green-600">
+                      ${(parseFloat(price || "0") - parseFloat(cost || "0")).toFixed(2)}
+                    </span>
+                  </div>
+                </div>
               </div>
 
               <ImageUpload
@@ -279,6 +353,59 @@ export default function ProductDetailEditModal({
                 onChange={setImageUrl}
                 disabled={loading || loadingData}
               />
+
+              <div className="space-y-2">
+                <Label htmlFor="description">Description</Label>
+                <Textarea
+                  id="description"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Enter product description (optional)"
+                  rows={3}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="brand">Brand *</Label>
+                  <Select
+                    value={brandId?.toString()}
+                    onValueChange={(value) => setBrandId(parseInt(value))}
+                    disabled={loadingData}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select brand" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {brands.map((brand) => (
+                        <SelectItem key={brand.brandId} value={brand.brandId.toString()}>
+                          {brand.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="provider">Provider *</Label>
+                  <Select
+                    value={providerId?.toString()}
+                    onValueChange={(value) => setProviderId(parseInt(value))}
+                    disabled={loadingData}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select provider" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {providers.map((provider) => (
+                        <SelectItem key={provider.providerId} value={provider.providerId.toString()}>
+                          {provider.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
 
               <div className="space-y-2">
                 <Label htmlFor="status">Status *</Label>
@@ -317,31 +444,25 @@ export default function ProductDetailEditModal({
                 </div>
               </div>
 
-              <div>
-                <Label className="text-muted-foreground">Brand (Cannot be changed)</Label>
-                <p className="text-lg font-semibold">{product.brand.name}</p>
-              </div>
-
-              <div>
-                <Label className="text-muted-foreground">Provider (Cannot be changed)</Label>
-                <p className="text-lg font-semibold">{product.provider.name}</p>
-              </div>
-
               <div className="flex justify-end gap-2 pt-4">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={() => {
                     setIsEditing(false)
-                    if (product) {
-                      setName(product.name)
-                      setBarCode(product.barCode)
-                      setPrice(product.price.toString())
-                      setStock(product.stock.toString())
-                      setImageUrl(product.imageUrl || "")
-                      setProductStatusType(product.productStatusType)
-                      setSelectedCategoryIds(product.categories.map((c) => c.productCategoryId))
-                    }
+                  if (product) {
+                    setName(product.name)
+                    setBarCode(product.barCode)
+                    setPrice(product.price.toString())
+                    setCost(product.cost?.toString() || "0")
+                    setStock(product.stock.toString())
+                    setImageUrl(product.imageUrl || "")
+                    setDescription(product.description || "")
+                    setProductStatusType(product.productStatusType)
+                    setBrandId(product.brand.brandId)
+                    setProviderId(product.provider.providerId)
+                    setSelectedCategoryIds(product.categories.map((c) => c.productCategoryId))
+                  }
                   }}
                   disabled={loading}
                 >
