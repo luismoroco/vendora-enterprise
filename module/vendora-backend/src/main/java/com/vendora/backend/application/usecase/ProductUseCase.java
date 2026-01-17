@@ -99,6 +99,22 @@ public class ProductUseCase {
     }
 
     if (
+      Objects.nonNull(request.getBrandId()) &&
+        !request.getBrandId().equals(product.getBrand().getBrandId())
+    ) {
+      Brand brand = this.brandService.findByIdOrThrow(request.getBrandId());
+      product.setBrand(brand);
+    }
+
+    if (
+      Objects.nonNull(request.getProviderId()) &&
+        !request.getProviderId().equals(product.getProvider().getProviderId())
+    ) {
+      Provider provider = this.providerService.findByIdOrThrow(request.getProviderId());
+      product.setProvider(provider);
+    }
+
+    if (
       Objects.nonNull(request.getProductCategoryIds())
     ) {
       List<ProductCategory> categories = this.productCategoryRepository.findAllByProductCategoryIdIn(request.getProductCategoryIds());

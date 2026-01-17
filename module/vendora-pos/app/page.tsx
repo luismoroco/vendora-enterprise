@@ -89,12 +89,13 @@ export default function POSPage() {
 
       <main className="flex-1 flex flex-col h-screen overflow-hidden">
         <div className="sticky top-0 z-10 bg-background p-4 border-b">
-          <div className="flex items-center justify-between gap-4">
-            <h1 className="text-2xl font-bold whitespace-nowrap">Point of Sale</h1>
-            
-            <div className="flex items-center gap-2 flex-1">
+
+          <div className="sticky top-0 z-10 bg-background p-4 border-b">
+            <h1 className="text-2xl font-bold mb-4">Point of Sale</h1>
+
+            <div className="flex items-center gap-2">
               {/* Name Search */}
-              <div className="relative flex-1">
+              <div className="relative w-64">
                 <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Search products..."
@@ -103,9 +104,9 @@ export default function POSPage() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
-              
+
               {/* Barcode Search */}
-              <div className="relative flex-1">
+              <div className="relative w-64">
                 <Barcode className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Scan or enter barcode..."
@@ -116,8 +117,8 @@ export default function POSPage() {
                   disabled={searchingBarCode}
                 />
               </div>
-              
-              <Button 
+
+              <Button
                 onClick={() => handleBarCodeSearch()}
                 disabled={searchingBarCode || !barCodeQuery.trim()}
                 className="whitespace-nowrap"

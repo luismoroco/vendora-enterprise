@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-cost-and-description-to-product
+      author: vendora.dev
+      changes:
+        - addColumn:
+            tableName: product
+            columns:
+              - column:
+                  name: cost
+                  type: NUMERIC(12,2)
+                  constraints:
+                    nullable: false
+                  defaultValueNumeric: 0.0
+              - column:
+                  name: description
+                  type: TEXT
+                  defaultValue: ""
+                  constraints:
+                    nullable: false
