@@ -2,7 +2,6 @@ package com.vendora.backend.web;
 
 import com.vendora.backend.application.entity.Product;
 import com.vendora.backend.application.usecase.ProductUseCase;
-import com.vendora.backend.common.web.api.Paginator;
 import com.vendora.backend.web.validator.CreateProductWebRequest;
 import com.vendora.backend.web.validator.GetProductsWebRequest;
 import com.vendora.backend.web.validator.UpdateProductWebRequest;
@@ -58,8 +57,6 @@ public class ProductController {
 
   @GetMapping("")
   public ResponseEntity<Page<Product>> findProducts(@Valid GetProductsWebRequest webRequest) {
-    System.out.printf("BRAND_IDS [ids=%s]", webRequest);
-
     return Stream.of(webRequest)
       .map(GetProductsWebRequest::buildRequest)
       .map(this.useCase::findProducts)

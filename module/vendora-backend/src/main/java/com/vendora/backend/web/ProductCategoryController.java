@@ -2,10 +2,10 @@ package com.vendora.backend.web;
 
 import com.vendora.backend.application.entity.ProductCategory;
 import com.vendora.backend.application.usecase.ProductCategoryUseCase;
-import com.vendora.backend.common.web.api.Paginator;
 import com.vendora.backend.web.validator.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -54,7 +54,7 @@ public class ProductCategoryController {
   }
 
   @GetMapping("")
-  public ResponseEntity<Paginator<ProductCategory>> getProductCategories(@Valid GetProductCategoriesWebRequest webRequest) {
+  public ResponseEntity<Page<ProductCategory>> getProductCategories(@Valid GetProductCategoriesWebRequest webRequest) {
     return Stream.of(webRequest)
       .map(GetProductCategoriesWebRequest::buildRequest)
       .map(this.useCase::getProductCategories)
@@ -62,13 +62,7 @@ public class ProductCategoryController {
         ResponseEntity
           .status(HttpStatus.OK)
           .contentType(MediaType.APPLICATION_JSON)
-          .body(
-            Paginator.<ProductCategory>builder()
-              .page(PAGE)
-              .size(PAGE_SIZE)
-              .content(productCategories)
-              .build()
-          )
+          .body(productCategories)
       )
       .findFirst()
       .orElseThrow();

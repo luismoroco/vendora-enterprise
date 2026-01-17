@@ -3,11 +3,11 @@
 import { useState } from "react"
 import { Search } from "lucide-react"
 import { Input } from "@/components/ui/input"
-import ProductGridNew from "./components/product-grid-new"
-import CartSidebar from "./components/cart-sidebar"
-import CategorySidebarNew from "./components/category-sidebar-new"
-import MainSidebar from "./components/main-sidebar"
-import { useCart } from "./context/cart-context"
+import ProductGridNew from "../components/product-grid-new"
+import CartSidebar from "../components/cart-sidebar"
+import CategorySidebarNew from "../components/category-sidebar-new"
+import MainSidebar from "../components/main-sidebar"
+import { useCart } from "../context/cart-context"
 import type { Product } from "@/lib/types"
 
 export default function POSPage() {
@@ -63,3 +63,4 @@ export default function POSPage() {
     </div>
   )
 }
+

@@ -7,6 +7,9 @@ import com.vendora.backend.application.usecase.request.CreateBrandRequest;
 import com.vendora.backend.application.usecase.request.GetBrandsRequest;
 import com.vendora.backend.application.usecase.request.UpdateBrandRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,8 +53,12 @@ public class BrandUseCase {
     return this.repository.save(brand);
   }
 
-  public List<Brand> getBrands(GetBrandsRequest request) {
-    return this.repository.findAllByBrandIdIn(request.getBrandIds());
+  public Page<Brand> getBrands(GetBrandsRequest request) {
+    return this.repository.find(
+      request.getName(),
+      request.getBrandIds(),
+      PageRequest.of(request.getPage() - 1, request.getSize(), Sort.by(Sort.Direction.ASC, "name"))
+    );
   }
 
   public Brand getBrandById(Long brandId) {

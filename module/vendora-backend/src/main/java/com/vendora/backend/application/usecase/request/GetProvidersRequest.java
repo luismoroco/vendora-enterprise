@@ -12,5 +12,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GetProvidersRequest {
+  private String name;
   private List<Long> providerIds;
+  private Integer page;
+  private Integer size;
 }

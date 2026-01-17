@@ -2,12 +2,12 @@ package com.vendora.backend.web;
 
 import com.vendora.backend.application.entity.Provider;
 import com.vendora.backend.application.usecase.ProviderUseCase;
-import com.vendora.backend.common.web.api.Paginator;
 import com.vendora.backend.web.validator.CreateProviderWebRequest;
 import com.vendora.backend.web.validator.GetProvidersWebRequest;
 import com.vendora.backend.web.validator.UpdateProviderWebRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -56,7 +56,7 @@ public class ProviderController {
   }
 
   @GetMapping("")
-  public ResponseEntity<Paginator<Provider>> getProviders(@Valid GetProvidersWebRequest webRequest) {
+  public ResponseEntity<Page<Provider>> getProviders(@Valid GetProvidersWebRequest webRequest) {
     return Stream.of(webRequest)
       .map(GetProvidersWebRequest::buildRequest)
       .map(this.useCase::getProviders)
@@ -64,13 +64,7 @@ public class ProviderController {
         ResponseEntity
           .status(HttpStatus.OK)
           .contentType(MediaType.APPLICATION_JSON)
-          .body(
-            Paginator.<Provider>builder()
-              .page(PAGE)
-              .size(PAGE_SIZE)
-              .content(providers)
-              .build()
-          )
+          .body(providers)
       )
       .findFirst()
       .orElseThrow();

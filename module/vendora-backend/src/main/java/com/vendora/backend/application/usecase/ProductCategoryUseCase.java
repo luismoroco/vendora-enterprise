@@ -8,6 +8,9 @@ import com.vendora.backend.application.usecase.request.UpdateProductCategoryRequ
 import com.vendora.backend.common.exc.BadRequestException;
 import com.vendora.backend.common.exc.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -60,8 +63,12 @@ public class ProductCategoryUseCase {
     return this.repository.save(productCategory);
   }
 
-  public List<ProductCategory> getProductCategories(GetProductCategoriesRequest request) {
-    return this.repository.findAllByProductCategoryIdIn(request.getProductCategoryIds());
+  public Page<ProductCategory> getProductCategories(GetProductCategoriesRequest request) {
+    return this.repository.find(
+      request.getName(),
+      request.getProductCategoryIds(),
+      PageRequest.of(request.getPage() - 1, request.getSize(), Sort.by(Sort.Direction.ASC, "name"))
+    );
   }
 
   public ProductCategory getProductCategoryById(Long productCategoryId) {
