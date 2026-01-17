@@ -86,56 +86,66 @@ export default function ProductGridNew({ categoryIds, searchQuery, onAddToCart }
   return (
     <>
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
-        {products.map((product) => (
-          <Card
-            key={product.productId}
-            className="overflow-hidden transition-all duration-200 hover:shadow-md cursor-pointer group relative"
-            onClick={(e) => handleProductClick(product, e)}
-          >
-            <div className="relative aspect-square">
-              <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity group-hover:opacity-100 z-10">
-                <div className="flex gap-2">
-                  <Button
-                    size="icon"
-                    variant="secondary"
-                    className="quick-add-btn h-10 w-10"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      handleQuickAdd(product)
-                    }}
-                  >
-                    <PlusCircle className="h-5 w-5" />
-                  </Button>
-                  <Button
-                    size="icon"
-                    variant="secondary"
-                    className="h-10 w-10"
-                  >
-                    <Eye className="h-5 w-5" />
-                  </Button>
+        {products.map((product) => {
+          const profit = product.price - (product.cost || 0);
+          const profitPercentage = product.cost ? ((profit / product.cost) * 100) : 0;
+          
+          return (
+            <Card
+              key={product.productId}
+              className="overflow-hidden transition-all duration-200 hover:shadow-md cursor-pointer group relative bg-gray-50"
+              onClick={(e) => handleProductClick(product, e)}
+            >
+              <div className="relative aspect-square">
+                <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity group-hover:opacity-100 z-10">
+                  <div className="flex gap-2">
+                    <Button
+                      size="icon"
+                      variant="secondary"
+                      className="quick-add-btn h-10 w-10"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleQuickAdd(product)
+                      }}
+                    >
+                      <PlusCircle className="h-5 w-5" />
+                    </Button>
+                    <Button
+                      size="icon"
+                      variant="secondary"
+                      className="h-10 w-10"
+                    >
+                      <Eye className="h-5 w-5" />
+                    </Button>
+                  </div>
                 </div>
+                <Image
+                  src={product.imageUrl || "/placeholder.svg"}
+                  alt={product.name}
+                  fill
+                  className="object-cover"
+                />
+                {product.stock <= 0 && (
+                  <div className="absolute top-2 right-2 bg-destructive text-destructive-foreground px-2 py-1 rounded text-xs font-semibold">
+                    Out of Stock
+                  </div>
+                )}
               </div>
-              <Image
-                src={product.imageUrl || "/placeholder.svg"}
-                alt={product.name}
-                fill
-                className="object-cover"
-              />
-              {product.stock <= 0 && (
-                <div className="absolute top-2 right-2 bg-destructive text-destructive-foreground px-2 py-1 rounded text-xs font-semibold">
-                  Out of Stock
+              <CardContent className="p-3">
+                <div>
+                  <h3 className="font-medium line-clamp-1">{product.name}</h3>
+                  <p className="text-sm font-semibold text-green-600">${product.price.toFixed(2)}</p>
+                  {product.cost > 0 && (
+                    <p className="text-xs text-muted-foreground">
+                      Cost: ${product.cost.toFixed(2)} | Profit: ${profit.toFixed(2)}
+                    </p>
+                  )}
+                  <p className="text-xs text-muted-foreground mt-1">Stock: {product.stock}</p>
                 </div>
-              )}
-            </div>
-            <CardContent className="p-3">
-              <div>
-                <h3 className="font-medium line-clamp-1">{product.name}</h3>
-                <p className="text-sm text-muted-foreground">${product.price.toFixed(2)}</p>
-                <p className="text-xs text-muted-foreground mt-1">Stock: {product.stock}</p>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+              </CardContent>
+            </Card>
+          );
+        })}
 
         {products.length === 0 && !loading && (
           <div className="col-span-full py-12 text-center">

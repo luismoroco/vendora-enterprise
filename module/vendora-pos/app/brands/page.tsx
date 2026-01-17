@@ -108,7 +108,7 @@ export default function BrandsPage() {
               {brands.map((brand) => (
                 <Card
                   key={brand.brandId}
-                  className="overflow-hidden transition-all duration-200 hover:shadow-md cursor-pointer group relative"
+                  className="overflow-hidden transition-all duration-200 hover:shadow-md cursor-pointer group relative bg-gray-50"
                   onClick={() => handleBrandClick(brand)}
                 >
                   <div className="relative aspect-square">

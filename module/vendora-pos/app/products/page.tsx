@@ -108,7 +108,7 @@ export default function ProductsPage() {
               {products.map((product) => (
                 <Card
                   key={product.productId}
-                  className="overflow-hidden transition-all duration-200 hover:shadow-md cursor-pointer group relative"
+                  className="overflow-hidden transition-all duration-200 hover:shadow-md cursor-pointer group relative bg-gray-50"
                   onClick={() => handleProductClick(product)}
                 >
                   <div className="relative aspect-square">

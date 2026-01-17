@@ -20,4 +20,6 @@ public class CreateProductRequest {
   private String imageUrl;
   private Long brandId;
   private List<Long> productCategoryIds;
+  private Double cost;
+  private String description;
 }

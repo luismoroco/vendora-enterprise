@@ -24,4 +24,6 @@ public class CreateProductWebRequest implements RequestAdapter<CreateProductRequ
   @NotBlank  private String imageUrl;
   @NotNull   private Long brandId;
   @NotNull   private List<Long> productCategoryIds;
+  @NotNull   private Double cost;
+  @NotNull   private String description;
 }

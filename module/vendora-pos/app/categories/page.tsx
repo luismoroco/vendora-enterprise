@@ -109,7 +109,7 @@ export default function CategoriesPage() {
               {categories.map((category) => (
                 <Card
                   key={category.productCategoryId}
-                  className="overflow-hidden transition-all duration-200 hover:shadow-md cursor-pointer group relative"
+                  className="overflow-hidden transition-all duration-200 hover:shadow-md cursor-pointer group relative bg-gray-50"
                   onClick={() => handleCategoryClick(category)}
                 >
                   <div className="relative aspect-square">

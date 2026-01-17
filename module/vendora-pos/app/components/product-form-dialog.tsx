@@ -14,6 +14,7 @@ import { categoryService } from "@/lib/services/categoryService"
 import { providerService } from "@/lib/services/providerService"
 import type { Product, Brand, ProductCategory, Provider } from "@/lib/types"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { Textarea } from "@/components/ui/textarea"
 import ImageUpload from "./image-upload"
 
 interface ProductFormDialogProps {
@@ -32,8 +33,10 @@ export default function ProductFormDialog({
   const [name, setName] = useState("")
   const [barCode, setBarCode] = useState("")
   const [price, setPrice] = useState("")
+  const [cost, setCost] = useState("")
   const [stock, setStock] = useState("")
   const [imageUrl, setImageUrl] = useState("")
+  const [description, setDescription] = useState("")
   const [brandId, setBrandId] = useState<number | null>(null)
   const [providerId, setProviderId] = useState<number | null>(null)
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([])
@@ -78,8 +81,10 @@ export default function ProductFormDialog({
       setName(product.name)
       setBarCode(product.barCode)
       setPrice(product.price.toString())
+      setCost(product.cost?.toString() || "0")
       setStock(product.stock.toString())
       setImageUrl(product.imageUrl || "")
+      setDescription(product.description || "")
       setBrandId(product.brand.brandId)
       setProviderId(product.provider.providerId)
       setSelectedCategoryIds(product.categories.map((c) => c.productCategoryId))
@@ -88,8 +93,10 @@ export default function ProductFormDialog({
       setName("")
       setBarCode("")
       setPrice("")
+      setCost("")
       setStock("")
       setImageUrl("")
+      setDescription("")
       setBrandId(null)
       setProviderId(null)
       setSelectedCategoryIds([])
@@ -108,7 +115,7 @@ export default function ProductFormDialog({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!name.trim() || !barCode.trim() || !price || !stock || !brandId || !providerId) {
+    if (!name.trim() || !barCode.trim() || !price || !cost || !stock || !brandId || !providerId) {
       toast.error("Please fill in all required fields")
       return
     }
@@ -127,8 +134,12 @@ export default function ProductFormDialog({
           name: name.trim(),
           barCode: barCode.trim(),
           price: parseFloat(price),
+          cost: parseFloat(cost),
           stock: parseInt(stock),
           imageUrl: imageUrl.trim() || undefined,
+          description: description.trim() || undefined,
+          brandId,
+          providerId,
           productCategoryIds: selectedCategoryIds,
           productStatusType,
         })
@@ -139,8 +150,10 @@ export default function ProductFormDialog({
           name: name.trim(),
           barCode: barCode.trim(),
           price: parseFloat(price),
+          cost: parseFloat(cost),
           stock: parseInt(stock),
           imageUrl: imageUrl.trim(),
+          description: description.trim(),
           brandId,
           providerId,
           productCategoryIds: selectedCategoryIds,
@@ -192,7 +205,7 @@ export default function ProductFormDialog({
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="price">Price *</Label>
+                <Label htmlFor="price">Sale Price *</Label>
                 <Input
                   id="price"
                   type="number"
@@ -206,6 +219,22 @@ export default function ProductFormDialog({
               </div>
 
               <div className="space-y-2">
+                <Label htmlFor="cost">Cost *</Label>
+                <Input
+                  id="cost"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={cost}
+                  onChange={(e) => setCost(e.target.value)}
+                  placeholder="0.00"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
                 <Label htmlFor="stock">Stock *</Label>
                 <Input
                   id="stock"
@@ -217,6 +246,15 @@ export default function ProductFormDialog({
                   required
                 />
               </div>
+
+              <div className="space-y-2">
+                <Label className="text-muted-foreground">Profit (Calculated)</Label>
+                <div className="flex items-center h-10 px-3 rounded-md border bg-muted">
+                  <span className="font-semibold text-green-600">
+                    ${(parseFloat(price || "0") - parseFloat(cost || "0")).toFixed(2)}
+                  </span>
+                </div>
+              </div>
             </div>
 
             <ImageUpload
@@ -225,6 +263,17 @@ export default function ProductFormDialog({
               onChange={setImageUrl}
               disabled={loading || loadingData}
             />
+
+            <div className="space-y-2">
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Enter product description (optional)"
+                rows={3}
+              />
+            </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
