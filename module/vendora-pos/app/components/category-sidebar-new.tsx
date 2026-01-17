@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import Image from "next/image"
 import { LayoutGrid } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -70,7 +71,7 @@ export default function CategorySidebarNew({ selectedCategoryIds, onSelectCatego
                 key={category.productCategoryId}
                 variant="ghost"
                 className={cn(
-                  "flex h-auto flex-col items-center justify-center py-4 border bg-transparent",
+                  "flex h-auto flex-col items-center justify-center py-3 border bg-transparent overflow-hidden",
                   isSelected
                     ? "border-2 border-primary text-foreground font-medium"
                     : "border-muted text-muted-foreground hover:border-muted-foreground hover:text-foreground",
@@ -78,14 +79,19 @@ export default function CategorySidebarNew({ selectedCategoryIds, onSelectCatego
                 )}
                 onClick={() => onSelectCategory([category.productCategoryId])}
               >
-                {category.imageUrl && (
-                  <div className="mb-2 h-6 w-6 relative">
-                    {/* You can add an icon here if needed */}
-                    <LayoutGrid className="h-6 w-6" />
+                {category.imageUrl ? (
+                  <div className="mb-2 h-12 w-12 relative rounded overflow-hidden">
+                    <Image
+                      src={category.imageUrl}
+                      alt={category.name}
+                      fill
+                      className="object-cover"
+                    />
                   </div>
+                ) : (
+                  <LayoutGrid className="mb-2 h-12 w-12 p-2 bg-muted rounded" />
                 )}
-                {!category.imageUrl && <LayoutGrid className="mb-2 h-6 w-6" />}
-                <span className="text-sm text-center">{category.name}</span>
+                <span className="text-xs text-center line-clamp-2">{category.name}</span>
               </Button>
             )
           })

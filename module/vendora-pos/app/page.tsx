@@ -141,7 +141,7 @@ export default function POSPage() {
           <ProductGridNew
             categoryIds={selectedCategoryIds}
             searchQuery={searchQuery}
-            onAddToCart={handleAddToCart}
+            onAddToCart={(product) => {}}
           />
         </div>
       </main>
@@ -153,10 +153,6 @@ export default function POSPage() {
         product={selectedProduct}
         open={productModalOpen}
         onOpenChange={setProductModalOpen}
-        onAddToCart={(product) => {
-          handleAddToCart(product)
-          toast.success(`${product.name} added to cart`)
-        }}
       />
 
       {/* Not Found Modal */}

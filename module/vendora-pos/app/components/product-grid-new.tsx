@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from "react"
 import Image from "next/image"
-import { PlusCircle, Eye } from "lucide-react"
+import { Eye, Plus, Minus, ShoppingCart } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { toast } from "sonner"
 import { productService } from "@/lib/services/productService"
+import { useCart } from "../context/cart-context"
 import type { Product, CartItem } from "@/lib/types"
 import ProductDetailModal from "./product-detail-modal"
 
@@ -23,6 +25,7 @@ export default function ProductGridNew({ categoryIds, searchQuery, onAddToCart }
   const [modalOpen, setModalOpen] = useState(false)
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
+  const { cart, addToCart, updateQuantity } = useCart()
 
   const fetchProducts = async () => {
     try {
@@ -48,23 +51,38 @@ export default function ProductGridNew({ categoryIds, searchQuery, onAddToCart }
   }, [page, categoryIds, searchQuery])
 
   const handleProductClick = (product: Product, event: React.MouseEvent) => {
-    // Check if the click was on the quick add button
     const target = event.target as HTMLElement
-    if (target.closest('.quick-add-btn')) {
-      handleQuickAdd(product)
-    } else {
-      setSelectedProduct(product)
-      setModalOpen(true)
+    // Don't open modal if clicking on cart controls
+    if (target.closest('.cart-controls')) {
+      return
     }
+    setSelectedProduct(product)
+    setModalOpen(true)
   }
 
-  const handleQuickAdd = (product: Product) => {
+  const handleAddToCart = (product: Product) => {
     if (product.stock > 0 && product.productStatusType === "ENABLED") {
-      onAddToCart(product)
+      addToCart({
+        id: product.productId,
+        name: product.name,
+        price: product.price,
+        image: product.imageUrl,
+        category: product.categories[0]?.name || "",
+      })
       toast.success(`${product.name} added to cart`)
     } else {
       toast.error("Product not available")
     }
+  }
+
+  const handleQuantityChange = (productId: number, newQuantity: number) => {
+    if (newQuantity < 0) return
+    updateQuantity(productId, newQuantity)
+  }
+
+  const getCartQuantity = (productId: number) => {
+    const cartItem = cart.find(item => item.id === productId)
+    return cartItem?.quantity || 0
   }
 
   if (loading && products.length === 0) {
@@ -88,36 +106,26 @@ export default function ProductGridNew({ categoryIds, searchQuery, onAddToCart }
       <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7">
         {products.map((product) => {
           const profit = product.price - (product.cost || 0);
-          const profitPercentage = product.cost ? ((profit / product.cost) * 100) : 0;
+          const cartQuantity = getCartQuantity(product.productId);
+          const isDisabled = product.productStatusType === "DISABLED" || product.stock <= 0;
           
           return (
             <Card
               key={product.productId}
-              className="overflow-hidden transition-all duration-200 hover:shadow-md cursor-pointer group relative bg-gray-50"
+              className={`overflow-hidden transition-all duration-200 hover:shadow-md cursor-pointer group relative ${
+                product.productStatusType === "DISABLED" ? "bg-gray-300 opacity-60" : "bg-gray-50"
+              }`}
               onClick={(e) => handleProductClick(product, e)}
             >
               <div className="relative aspect-square">
                 <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity group-hover:opacity-100 z-10">
-                  <div className="flex gap-2">
-                    <Button
-                      size="icon"
-                      variant="secondary"
-                      className="quick-add-btn h-10 w-10"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        handleQuickAdd(product)
-                      }}
-                    >
-                      <PlusCircle className="h-5 w-5" />
-                    </Button>
-                    <Button
-                      size="icon"
-                      variant="secondary"
-                      className="h-10 w-10"
-                    >
-                      <Eye className="h-5 w-5" />
-                    </Button>
-                  </div>
+                  <Button
+                    size="icon"
+                    variant="secondary"
+                    className="h-10 w-10"
+                  >
+                    <Eye className="h-5 w-5" />
+                  </Button>
                 </div>
                 <Image
                   src={product.imageUrl || "/placeholder.svg"}
@@ -130,19 +138,66 @@ export default function ProductGridNew({ categoryIds, searchQuery, onAddToCart }
                     Out of Stock
                   </div>
                 )}
-              </div>
-            <CardContent className="p-2">
-              <div>
-                <h3 className="text-sm font-medium line-clamp-2 mb-1 h-10">{product.name}</h3>
-                <p className="text-sm font-bold text-green-600">${product.price.toFixed(2)}</p>
-                {product.cost > 0 && (
-                  <p className="text-[10px] text-muted-foreground leading-tight">
-                    Profit: ${profit.toFixed(2)}
-                  </p>
+                {product.productStatusType === "DISABLED" && (
+                  <div className="absolute top-2 left-2 bg-orange-500 text-white px-2 py-1 rounded text-xs font-semibold">
+                    DISABLED
+                  </div>
                 )}
-                <p className="text-[10px] text-muted-foreground">Stock: {product.stock}</p>
               </div>
-            </CardContent>
+              <CardContent className="p-2">
+                <div>
+                  <h3 className="text-sm font-medium line-clamp-2 mb-1 h-10">{product.name}</h3>
+                  <p className="text-sm font-bold text-green-600">${product.price.toFixed(2)}</p>
+                  {product.cost > 0 && (
+                    <p className="text-[10px] text-muted-foreground leading-tight">
+                      Profit: ${profit.toFixed(2)}
+                    </p>
+                  )}
+                  <p className="text-[10px] text-muted-foreground">Stock: {product.stock}</p>
+                </div>
+              </CardContent>
+              
+              {/* Cart Controls Section */}
+              <div className="cart-controls bg-gray-800 p-2 border-t border-gray-700" onClick={(e) => e.stopPropagation()}>
+                {cartQuantity === 0 ? (
+                  <Button
+                    size="sm"
+                    className="w-full h-8 bg-blue-600 hover:bg-blue-700 text-white"
+                    onClick={() => handleAddToCart(product)}
+                    disabled={isDisabled}
+                  >
+                    <ShoppingCart className="h-3 w-3 mr-1" />
+                    Add
+                  </Button>
+                ) : (
+                  <div className="flex items-center gap-1">
+                    <Button
+                      size="icon"
+                      variant="secondary"
+                      className="h-7 w-7 bg-red-500 hover:bg-red-600 text-white"
+                      onClick={() => handleQuantityChange(product.productId, cartQuantity - 1)}
+                    >
+                      <Minus className="h-3 w-3" />
+                    </Button>
+                    <Input
+                      type="number"
+                      min="0"
+                      value={cartQuantity}
+                      onChange={(e) => handleQuantityChange(product.productId, parseInt(e.target.value) || 0)}
+                      className="h-7 text-center text-xs font-semibold px-1 bg-white"
+                    />
+                    <Button
+                      size="icon"
+                      variant="secondary"
+                      className="h-7 w-7 bg-green-500 hover:bg-green-600 text-white"
+                      onClick={() => handleAddToCart(product)}
+                      disabled={isDisabled}
+                    >
+                      <Plus className="h-3 w-3" />
+                    </Button>
+                  </div>
+                )}
+              </div>
             </Card>
           );
         })}

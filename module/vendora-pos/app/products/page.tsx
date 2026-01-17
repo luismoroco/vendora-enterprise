@@ -108,7 +108,9 @@ export default function ProductsPage() {
               {products.map((product) => (
                 <Card
                   key={product.productId}
-                  className="overflow-hidden transition-all duration-200 hover:shadow-md cursor-pointer group relative bg-gray-50"
+                  className={`overflow-hidden transition-all duration-200 hover:shadow-md cursor-pointer group relative ${
+                    product.productStatusType === "DISABLED" ? "bg-gray-300 opacity-60" : "bg-gray-50"
+                  }`}
                   onClick={() => handleProductClick(product)}
                 >
                   <div className="relative aspect-square">
@@ -127,12 +129,17 @@ export default function ProductsPage() {
                       fill
                       className="object-cover"
                     />
-                    {product.stock <= 0 && (
-                      <div className="absolute top-2 right-2 bg-destructive text-destructive-foreground px-2 py-1 rounded text-xs font-semibold">
-                        Out of Stock
-                      </div>
-                    )}
-                  </div>
+                  {product.stock <= 0 && (
+                    <div className="absolute top-2 right-2 bg-destructive text-destructive-foreground px-2 py-1 rounded text-xs font-semibold">
+                      Out of Stock
+                    </div>
+                  )}
+                  {product.productStatusType === "DISABLED" && (
+                    <div className="absolute top-2 left-2 bg-orange-500 text-white px-2 py-1 rounded text-xs font-semibold">
+                      DISABLED
+                    </div>
+                  )}
+                </div>
                   <CardContent className="p-2">
                     <div>
                       <h3 className="text-sm font-medium line-clamp-2 mb-1 h-10">{product.name}</h3>

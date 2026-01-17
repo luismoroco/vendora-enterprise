@@ -210,7 +210,7 @@ export default function ProductDetailEditModal({
               <div>
                 <Label className="text-muted-foreground">Status</Label>
                 <div className="mt-1">
-                  <Badge variant={product.productStatusType === "ENABLED" ? "default" : "secondary"}>
+                  <Badge className={product.productStatusType === "ENABLED" ? "bg-green-500 hover:bg-green-600" : "bg-orange-500 hover:bg-orange-600"}>
                     {product.productStatusType}
                   </Badge>
                 </div>

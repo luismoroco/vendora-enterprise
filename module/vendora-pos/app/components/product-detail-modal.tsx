@@ -12,14 +12,12 @@ interface ProductDetailModalProps {
   product: Product | null
   open: boolean
   onOpenChange: (open: boolean) => void
-  onAddToCart: (product: Product) => void
 }
 
 export default function ProductDetailModal({
   product,
   open,
   onOpenChange,
-  onAddToCart,
 }: ProductDetailModalProps) {
   if (!product) return null
 
@@ -81,7 +79,7 @@ export default function ProductDetailModal({
 
             {/* Status */}
             <div className="flex items-center gap-2">
-              <Badge variant={product.productStatusType === "ENABLED" ? "default" : "secondary"}>
+              <Badge className={product.productStatusType === "ENABLED" ? "bg-green-500 hover:bg-green-600" : "bg-orange-500 hover:bg-orange-600"}>
                 {product.productStatusType}
               </Badge>
             </div>
@@ -124,19 +122,12 @@ export default function ProductDetailModal({
               </div>
             )}
 
-            {/* Add to Cart Button */}
-            <Button
-              className="w-full mt-4"
-              size="lg"
-              onClick={() => {
-                onAddToCart(product)
-                onOpenChange(false)
-              }}
-              disabled={product.stock <= 0 || product.productStatusType === "DISABLED"}
-            >
-              <ShoppingCart className="mr-2 h-5 w-5" />
-              Add to Cart
-            </Button>
+            {product.description && (
+              <div className="mt-4">
+                <Label className="text-muted-foreground">Description</Label>
+                <p className="text-sm mt-1">{product.description}</p>
+              </div>
+            )}
           </div>
         </div>
       </DialogContent>
