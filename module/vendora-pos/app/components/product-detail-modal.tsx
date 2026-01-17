@@ -4,6 +4,7 @@ import Image from "next/image"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Label } from "@/components/ui/label"
 import { ShoppingCart, Package, DollarSign, Tag, Building2 } from "lucide-react"
 import type { Product } from "@/lib/types"
 
@@ -42,10 +43,29 @@ export default function ProductDetailModal({
 
           {/* Product Details */}
           <div className="flex flex-col gap-4">
-            {/* Price */}
-            <div className="flex items-center gap-2">
-              <DollarSign className="h-5 w-5 text-muted-foreground" />
-              <span className="text-3xl font-bold">${product.price.toFixed(2)}</span>
+            {/* Price & Profit Card */}
+            <div className="border-l-4 border-green-500 pl-4 bg-green-50 p-3 rounded">
+              <div className="flex items-center gap-2 mb-2">
+                <DollarSign className="h-5 w-5 text-green-600" />
+                <span className="text-sm text-muted-foreground">Sale Price</span>
+              </div>
+              <span className="text-3xl font-bold text-green-600">${product.price.toFixed(2)}</span>
+              
+              {product.cost > 0 && (
+                <>
+                  <div className="mt-3 space-y-1">
+                    <p className="text-sm text-muted-foreground">
+                      Cost: <span className="font-semibold text-gray-700">${product.cost.toFixed(2)}</span>
+                    </p>
+                    <p className="text-sm font-semibold text-green-700">
+                      Profit: ${(product.price - product.cost).toFixed(2)} 
+                      <span className="text-xs ml-1">
+                        ({(((product.price - product.cost) / product.cost) * 100).toFixed(1)}%)
+                      </span>
+                    </p>
+                  </div>
+                </>
+              )}
             </div>
 
             {/* Stock */}

@@ -88,13 +88,13 @@ export default function ProductsPage() {
 
         <div className="flex-1 overflow-auto p-6">
           {loading && products.length === 0 ? (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
-              {Array.from({ length: 10 }).map((_, i) => (
+            <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7">
+              {Array.from({ length: 14 }).map((_, i) => (
                 <Card key={i} className="overflow-hidden animate-pulse">
                   <div className="aspect-square bg-muted" />
-                  <CardContent className="p-3">
-                    <div className="h-4 bg-muted rounded mb-2" />
-                    <div className="h-3 bg-muted rounded w-1/2" />
+                  <CardContent className="p-2">
+                    <div className="h-3 bg-muted rounded mb-1" />
+                    <div className="h-2 bg-muted rounded w-1/2" />
                   </CardContent>
                 </Card>
               ))}
@@ -104,7 +104,7 @@ export default function ProductsPage() {
               <p className="text-muted-foreground">No products found</p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
+            <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7">
               {products.map((product) => (
                 <Card
                   key={product.productId}
@@ -133,11 +133,11 @@ export default function ProductsPage() {
                       </div>
                     )}
                   </div>
-                  <CardContent className="p-3">
+                  <CardContent className="p-2">
                     <div>
-                      <h3 className="font-medium line-clamp-1">{product.name}</h3>
-                      <p className="text-sm text-muted-foreground">${product.price.toFixed(2)}</p>
-                      <p className="text-xs text-muted-foreground mt-1">Stock: {product.stock}</p>
+                      <h3 className="text-sm font-medium line-clamp-2 mb-1 h-10">{product.name}</h3>
+                      <p className="text-sm font-bold text-green-600">${product.price.toFixed(2)}</p>
+                      <p className="text-[10px] text-muted-foreground">Stock: {product.stock}</p>
                     </div>
                   </CardContent>
                 </Card>

@@ -89,13 +89,13 @@ export default function CategoriesPage() {
 
         <div className="flex-1 overflow-auto p-6">
           {loading && categories.length === 0 ? (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
-              {Array.from({ length: 10 }).map((_, i) => (
+            <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7">
+              {Array.from({ length: 14 }).map((_, i) => (
                 <Card key={i} className="overflow-hidden animate-pulse">
                   <div className="aspect-square bg-muted" />
-                  <CardContent className="p-3">
-                    <div className="h-4 bg-muted rounded mb-2" />
-                    <div className="h-3 bg-muted rounded w-1/2" />
+                  <CardContent className="p-2">
+                    <div className="h-3 bg-muted rounded mb-1" />
+                    <div className="h-2 bg-muted rounded w-1/2" />
                   </CardContent>
                 </Card>
               ))}
@@ -105,7 +105,7 @@ export default function CategoriesPage() {
               <p className="text-muted-foreground">No categories found</p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
+            <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7">
               {categories.map((category) => (
                 <Card
                   key={category.productCategoryId}
@@ -135,10 +135,10 @@ export default function CategoriesPage() {
                       </div>
                     )}
                   </div>
-                  <CardContent className="p-3">
+                  <CardContent className="p-2">
                     <div>
-                      <h3 className="font-medium line-clamp-1">{category.name}</h3>
-                      <p className="text-xs text-muted-foreground">ID: {category.productCategoryId}</p>
+                      <h3 className="text-sm font-medium line-clamp-2 mb-1">{category.name}</h3>
+                      <p className="text-[10px] text-muted-foreground">ID: {category.productCategoryId}</p>
                     </div>
                   </CardContent>
                 </Card>
