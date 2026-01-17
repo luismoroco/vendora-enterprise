@@ -1,9 +1,11 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Search, Barcode } from "lucide-react"
+import { useTranslations } from 'next-intl'
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 import {
   Dialog,
   DialogContent,
@@ -19,17 +21,39 @@ import MainSidebar from "../components/main-sidebar"
 import ProductDetailModal from "../components/product-detail-modal"
 import { useCart } from "../context/cart-context"
 import { productService } from "@/lib/services/productService"
-import type { Product } from "@/lib/types"
+import { brandService } from "@/lib/services/brandService"
+import type { Product, Brand } from "@/lib/types"
 
 export default function POSPage() {
+  const t = useTranslations()
   const [searchQuery, setSearchQuery] = useState("")
   const [barCodeQuery, setBarCodeQuery] = useState("")
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([])
+  const [selectedBrandId, setSelectedBrandId] = useState<number | undefined>(undefined)
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [productModalOpen, setProductModalOpen] = useState(false)
   const [notFoundModalOpen, setNotFoundModalOpen] = useState(false)
   const [searchingBarCode, setSearchingBarCode] = useState(false)
+  const [brands, setBrands] = useState<Brand[]>([])
+  const [loadingBrands, setLoadingBrands] = useState(true)
   const { addToCart } = useCart()
+
+  useEffect(() => {
+    const fetchBrands = async () => {
+      try {
+        setLoadingBrands(true)
+        const response = await brandService.getBrands({ page: 1, size: 100 })
+        setBrands(response.content)
+      } catch (error) {
+        console.error("Error fetching brands:", error)
+        toast.error(t('brands.noBrands'))
+      } finally {
+        setLoadingBrands(false)
+      }
+    }
+
+    fetchBrands()
+  }, [t])
 
   const handleAddToCart = (product: Product) => {
     // Convert Product to the cart context format
@@ -46,7 +70,7 @@ export default function POSPage() {
     e?.preventDefault()
     
     if (!barCodeQuery.trim()) {
-      toast.error("Please enter a barcode")
+      toast.error(t('pos.noProductWithBarcode'))
       return
     }
 
@@ -67,7 +91,7 @@ export default function POSPage() {
       }
     } catch (error) {
       console.error("Error searching by barcode:", error)
-      toast.error("Error searching for product")
+      toast.error(t('products.loadError'))
     } finally {
       setSearchingBarCode(false)
     }
@@ -126,11 +150,43 @@ export default function POSPage() {
               </Button>
             </div>
           </div>
+
+          {/* Brands Filter Bar */}
+          <div className="mt-4">
+            <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+              <Badge
+                variant={selectedBrandId === undefined ? "default" : "outline"}
+                className="cursor-pointer whitespace-nowrap hover:bg-primary/90 px-4 py-2 text-sm"
+                onClick={() => setSelectedBrandId(undefined)}
+              >
+                All Brands
+              </Badge>
+              {loadingBrands ? (
+                <div className="flex gap-2">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <div key={i} className="h-8 w-20 bg-muted animate-pulse rounded-full" />
+                  ))}
+                </div>
+              ) : (
+                brands.map((brand) => (
+                  <Badge
+                    key={brand.brandId}
+                    variant={selectedBrandId === brand.brandId ? "default" : "outline"}
+                    className="cursor-pointer whitespace-nowrap hover:bg-primary/90 px-4 py-2 text-sm"
+                    onClick={() => setSelectedBrandId(brand.brandId)}
+                  >
+                    {brand.name}
+                  </Badge>
+                ))
+              )}
+            </div>
+          </div>
         </div>
 
         <div className="flex-1 overflow-auto p-4">
           <ProductGridNew
             categoryIds={selectedCategoryIds}
+            brandId={selectedBrandId}
             searchQuery={searchQuery}
             onAddToCart={handleAddToCart}
           />

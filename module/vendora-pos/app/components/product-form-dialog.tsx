@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Switch } from "@/components/ui/switch"
 import { toast } from "sonner"
 import { productService } from "@/lib/services/productService"
 import { brandService } from "@/lib/services/brandService"
@@ -318,20 +319,18 @@ export default function ProductFormDialog({
             </div>
 
             {product && (
-              <div className="space-y-2">
-                <Label htmlFor="status">Status *</Label>
-                <Select
-                  value={productStatusType}
-                  onValueChange={(value) => setProductStatusType(value as "ENABLED" | "DISABLED")}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="ENABLED">Enabled</SelectItem>
-                    <SelectItem value="DISABLED">Disabled</SelectItem>
-                  </SelectContent>
-                </Select>
+              <div className="flex items-center justify-between space-x-2 p-4 border rounded-lg">
+                <div className="space-y-0.5">
+                  <Label htmlFor="status" className="text-base">Product Status</Label>
+                  <div className="text-sm text-muted-foreground">
+                    {productStatusType === "ENABLED" ? "Product is enabled and visible" : "Product is disabled and hidden"}
+                  </div>
+                </div>
+                <Switch
+                  id="status"
+                  checked={productStatusType === "ENABLED"}
+                  onCheckedChange={(checked) => setProductStatusType(checked ? "ENABLED" : "DISABLED")}
+                />
               </div>
             )}
 

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import Image from "next/image"
 import { Eye, Plus, Minus, ShoppingCart } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
@@ -14,41 +14,87 @@ import ProductDetailModal from "./product-detail-modal"
 
 interface ProductGridNewProps {
   categoryIds?: number[]
+  brandId?: number
   searchQuery: string
   onAddToCart: (product: Product) => void
 }
 
-export default function ProductGridNew({ categoryIds, searchQuery, onAddToCart }: ProductGridNewProps) {
+export default function ProductGridNew({ categoryIds, brandId, searchQuery, onAddToCart }: ProductGridNewProps) {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
+  const [loadingMore, setLoadingMore] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [modalOpen, setModalOpen] = useState(false)
   const [page, setPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
+  const [hasMore, setHasMore] = useState(true)
   const { cart, addToCart, updateQuantity } = useCart()
+  const observerTarget = useRef<HTMLDivElement>(null)
 
-  const fetchProducts = async () => {
+  const fetchProducts = async (pageNum: number, isNewSearch = false) => {
     try {
-      setLoading(true)
+      if (pageNum === 1) {
+        setLoading(true)
+      } else {
+        setLoadingMore(true)
+      }
+      
       const response = await productService.getProducts({
         name: searchQuery || undefined,
         categoryIds: categoryIds && categoryIds.length > 0 ? categoryIds : undefined,
-        page,
+        brandId: brandId || undefined,
+        page: pageNum,
         size: 20,
       })
-      setProducts(response.content)
-      setTotalPages(response.totalPages)
+      
+      if (isNewSearch) {
+        setProducts(response.content)
+      } else {
+        setProducts(prev => [...prev, ...response.content])
+      }
+      
+      setHasMore(pageNum < response.totalPages)
     } catch (error) {
       toast.error("Failed to load products")
       console.error("Error fetching products:", error)
     } finally {
       setLoading(false)
+      setLoadingMore(false)
     }
   }
 
   useEffect(() => {
-    fetchProducts()
-  }, [page, categoryIds, searchQuery])
+    setPage(1)
+    setProducts([])
+    fetchProducts(1, true)
+  }, [categoryIds, brandId, searchQuery])
+
+  useEffect(() => {
+    if (page > 1) {
+      fetchProducts(page)
+    }
+  }, [page])
+
+  // Infinite scroll observer
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting && hasMore && !loading && !loadingMore) {
+          setPage(prev => prev + 1)
+        }
+      },
+      { threshold: 0.1 }
+    )
+
+    if (observerTarget.current) {
+      observer.observe(observerTarget.current)
+    }
+
+    return () => {
+      if (observerTarget.current) {
+        observer.unobserve(observerTarget.current)
+      }
+    }
+  }, [hasMore, loading, loadingMore])
 
   const handleProductClick = (product: Product, event: React.MouseEvent) => {
     const target = event.target as HTMLElement
@@ -209,26 +255,22 @@ export default function ProductGridNew({ categoryIds, searchQuery, onAddToCart }
         )}
       </div>
 
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="flex justify-center gap-2 mt-6">
-          <Button
-            variant="outline"
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-            disabled={page === 1}
-          >
-            Previous
-          </Button>
-          <span className="flex items-center px-4">
-            Page {page} of {totalPages}
-          </span>
-          <Button
-            variant="outline"
-            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-            disabled={page === totalPages}
-          >
-            Next
-          </Button>
+      {/* Infinite scroll trigger */}
+      {hasMore && (
+        <div ref={observerTarget} className="flex justify-center py-6">
+          {loadingMore && (
+            <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7">
+              {Array.from({ length: 7 }).map((_, i) => (
+                <Card key={i} className="overflow-hidden animate-pulse">
+                  <div className="aspect-square bg-muted" />
+                  <CardContent className="p-2">
+                    <div className="h-3 bg-muted rounded mb-1" />
+                    <div className="h-2 bg-muted rounded w-1/2" />
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
@@ -244,4 +286,5 @@ export default function ProductGridNew({ categoryIds, searchQuery, onAddToCart }
     </>
   )
 }
+
 
