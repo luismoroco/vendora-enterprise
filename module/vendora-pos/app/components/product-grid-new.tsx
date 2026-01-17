@@ -41,7 +41,7 @@ export default function ProductGridNew({ categoryIds, brandId, searchQuery, onAd
       const response = await productService.getProducts({
         name: searchQuery || undefined,
         categoryIds: categoryIds && categoryIds.length > 0 ? categoryIds : undefined,
-        brandId: brandId || undefined,
+        brandIds: brandId ? [brandId] : undefined,
         page: pageNum,
         size: 20,
       })
