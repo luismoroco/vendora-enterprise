@@ -68,9 +68,9 @@ public class ProviderUseCase {
 
   public Page<Provider> getProviders(GetProvidersRequest request) {
     return this.repository.find(
-      request.getName(),
+      Objects.isNull(request.getName()) ? "" : request.getName(),
       request.getProviderIds(),
-      PageRequest.of(request.getPage() - 1, request.getSize(), Sort.by(Sort.Direction.ASC, "name"))
+      PageRequest.of(request.getPage() - 1, request.getSize(), Sort.by(Sort.Direction.ASC, "updatedAt"))
     );
   }
 

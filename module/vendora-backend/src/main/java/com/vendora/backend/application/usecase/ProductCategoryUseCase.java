@@ -65,9 +65,9 @@ public class ProductCategoryUseCase {
 
   public Page<ProductCategory> getProductCategories(GetProductCategoriesRequest request) {
     return this.repository.find(
-      request.getName(),
+      Objects.isNull(request.getName()) ? "" : request.getName(),
       request.getProductCategoryIds(),
-      PageRequest.of(request.getPage() - 1, request.getSize(), Sort.by(Sort.Direction.ASC, "name"))
+      PageRequest.of(request.getPage() - 1, request.getSize(), Sort.by(Sort.Direction.ASC, "updatedAt"))
     );
   }
 
