@@ -20,7 +20,7 @@ export class HttpCrudRepository<E, I> {
     return HttpClient.get<E>(`${this.resource}/{id}`);
   }
 
-  public async update(entity: E): Promise<E> {
+  public async update(entity: Partial<E>): Promise<E> {
     return HttpClient.put<E>(`${this.resource}/{id}`, {body: entity});
   }
 }
