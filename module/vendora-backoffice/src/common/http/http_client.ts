@@ -1,4 +1,6 @@
 export class HttpClient {
+  private baseUrl: string;
+
   private constructor() {
   }
 
