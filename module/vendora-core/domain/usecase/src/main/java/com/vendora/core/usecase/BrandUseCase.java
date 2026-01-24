@@ -1,10 +1,10 @@
 package com.vendora.core.usecase;
 
-import com.vendora.common.LogCatalog;
-import com.vendora.common.exc.BadRequestException;
 import com.vendora.core.model.Brand;
 import com.vendora.core.model.gateway.BrandRepository;
 import com.vendora.core.usecase.dto.CreateBrandDTO;
+import com.vendora.core.usecase.dto.UpdateBrandDTO;
+import com.vendora.core.usecase.service.BrandService;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
@@ -12,21 +12,38 @@ import reactor.core.publisher.Mono;
 public class BrandUseCase {
 
     private final BrandRepository repository;
+    private final BrandService service;
 
     public Mono<Brand> createBrand(CreateBrandDTO dto) {
-        return this.repository.existsByNameAndTenantId(dto.getName(), dto.getTenantId())
-            .flatMap(flag -> flag.equals(Boolean.TRUE)
-                ? Mono.error(new BadRequestException(LogCatalog.ENTITY_ALREADY_EXISTS.of(Brand.TYPE)))
-                : Mono.empty()
-            )
-            .then(Mono.defer(() -> {
-                Brand brand = Brand.builder()
+        return this.service.verifyNameUniquenessOrThrow(dto.getName(), dto.getTenantId())
+            .then(this.repository.save(
+                Brand.builder()
                     .name(dto.getName())
                     .imageUrl(dto.getImageUrl())
                     .tenantId(dto.getTenantId())
-                    .build();
+                    .build()
+          ));
+    }
 
-                return this.repository.save(brand);
-            }));
+    public Mono<Brand> updateBrand(UpdateBrandDTO dto) {
+        return this.service.findByBrandIdAndTenantIdOrThrow(dto.getBrandId(), dto.getTenantId())
+            .flatMap(brand ->
+                Mono.justOrEmpty(dto.getName())
+                    .filter(name -> !name.equals(brand.getName()))
+                    .flatMap(name ->
+                        this.service.verifyNameUniquenessOrThrow(name, dto.getTenantId())
+                            .doOnSuccess(__ -> brand.setName(name))
+                            .thenReturn(brand)
+                    )
+                    .defaultIfEmpty(brand)
+            )
+            .flatMap(brand ->
+                Mono.justOrEmpty(dto.getImageUrl())
+                    .filter(imageUrl -> !imageUrl.equals(brand.getImageUrl()))
+                    .doOnNext(brand::setImageUrl)
+                    .thenReturn(brand)
+                    .defaultIfEmpty(brand)
+            )
+            .flatMap(this.repository::save);
     }
 }

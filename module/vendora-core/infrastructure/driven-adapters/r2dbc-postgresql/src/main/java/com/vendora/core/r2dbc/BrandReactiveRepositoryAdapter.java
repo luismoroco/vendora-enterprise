@@ -24,4 +24,9 @@ public class BrandReactiveRepositoryAdapter extends ReactiveAdapterOperations<Br
   public Mono<Boolean> existsByNameAndTenantId(String name, Long tenantId) {
     return this.repository.existsByNameAndTenantId(name, tenantId);
   }
+
+  @Override
+  public Mono<Brand> findByBrandIdAndTenantId(Long brandId, Long tenantId) {
+    return this.repository.findByBrandIdAndTenantId(brandId, tenantId).map(this::toEntity);
+  }
 }

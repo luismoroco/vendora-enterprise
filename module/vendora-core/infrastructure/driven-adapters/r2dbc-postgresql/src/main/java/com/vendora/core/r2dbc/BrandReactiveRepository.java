@@ -10,4 +10,6 @@ public interface BrandReactiveRepository extends ReactiveCrudRepository<BrandEnt
     Mono<BrandEntity> findByNameAndTenantId(String name, Long tenantId);
 
     Mono<Boolean> existsByNameAndTenantId(String name, Long tenantId);
+
+    Mono<BrandEntity> findByBrandIdAndTenantId(Long brandId, Long tenantId);
 }

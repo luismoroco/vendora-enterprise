@@ -10,4 +10,6 @@ public interface BrandRepository {
     Mono<Brand> findByNameAndTenantId(String name, Long tenantId);
 
     Mono<Boolean> existsByNameAndTenantId(String name, Long tenantId);
+
+    Mono<Brand> findByBrandIdAndTenantId(Long brandId, Long tenantId);
 }
