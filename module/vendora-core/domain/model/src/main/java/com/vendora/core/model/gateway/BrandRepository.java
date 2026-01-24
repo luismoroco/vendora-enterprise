@@ -1,6 +1,6 @@
-package com.vendora.core.model.brand.gateways;
+package com.vendora.core.model.gateway;
 
-import com.vendora.core.model.brand.Brand;
+import com.vendora.core.model.Brand;
 import reactor.core.publisher.Mono;
 
 public interface BrandRepository {

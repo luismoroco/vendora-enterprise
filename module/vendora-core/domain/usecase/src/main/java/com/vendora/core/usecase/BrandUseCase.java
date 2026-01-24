@@ -1,10 +1,10 @@
-package com.vendora.core.usecase.brand;
+package com.vendora.core.usecase;
 
 import com.vendora.common.LogCatalog;
 import com.vendora.common.exc.BadRequestException;
-import com.vendora.core.model.brand.Brand;
-import com.vendora.core.model.brand.gateways.BrandRepository;
-import com.vendora.core.usecase.brand.dto.CreateBrandDTO;
+import com.vendora.core.model.Brand;
+import com.vendora.core.model.gateway.BrandRepository;
+import com.vendora.core.usecase.dto.CreateBrandDTO;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 

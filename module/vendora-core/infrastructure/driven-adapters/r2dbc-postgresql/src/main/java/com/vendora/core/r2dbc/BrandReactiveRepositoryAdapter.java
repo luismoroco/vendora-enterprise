@@ -1,7 +1,7 @@
 package com.vendora.core.r2dbc;
 
-import com.vendora.core.model.brand.Brand;
-import com.vendora.core.model.brand.gateways.BrandRepository;
+import com.vendora.core.model.Brand;
+import com.vendora.core.model.gateway.BrandRepository;
 import com.vendora.core.r2dbc.entity.BrandEntity;
 import com.vendora.core.r2dbc.helper.ReactiveAdapterOperations;
 import org.reactivecommons.utils.ObjectMapper;

@@ -1,6 +1,6 @@
-package com.vendora.core.model.provider.gateways;
+package com.vendora.core.model.gateway;
 
-import com.vendora.core.model.provider.Provider;
+import com.vendora.core.model.Provider;
 import reactor.core.publisher.Mono;
 
 public interface ProviderRepository {

@@ -1,7 +1,7 @@
 package com.vendora.core.r2dbc;
 
-import com.vendora.core.model.tenant.Tenant;
-import com.vendora.core.model.tenant.gateways.TenantRepository;
+import com.vendora.core.model.Tenant;
+import com.vendora.core.model.gateway.TenantRepository;
 import com.vendora.core.r2dbc.entity.TenantEntity;
 import com.vendora.core.r2dbc.helper.ReactiveAdapterOperations;
 import org.reactivecommons.utils.ObjectMapper;

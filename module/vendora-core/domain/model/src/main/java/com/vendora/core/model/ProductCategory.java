@@ -1,4 +1,4 @@
-package com.vendora.core.model.brand;
+package com.vendora.core.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,12 +11,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class Brand {
+public class ProductCategory {
 
-  public static final String TYPE = "Brand";
-
-  private Long    brandId;
-  private String  name;
-  private String  imageUrl;
-  private Long    tenantId;
+    private Long    productCategoryId;
+    private String  name;
+    private Boolean featured;
+    private String  imageUrl;
+    private Long    tenantId;
 }

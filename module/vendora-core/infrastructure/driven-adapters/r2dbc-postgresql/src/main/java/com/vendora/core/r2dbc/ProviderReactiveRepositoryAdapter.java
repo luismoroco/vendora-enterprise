@@ -1,7 +1,7 @@
 package com.vendora.core.r2dbc;
 
-import com.vendora.core.model.provider.Provider;
-import com.vendora.core.model.provider.gateways.ProviderRepository;
+import com.vendora.core.model.Provider;
+import com.vendora.core.model.gateway.ProviderRepository;
 import com.vendora.core.r2dbc.entity.ProviderEntity;
 import com.vendora.core.r2dbc.helper.ReactiveAdapterOperations;
 import org.reactivecommons.utils.ObjectMapper;

@@ -1,8 +1,8 @@
-package com.vendora.core.usecase.tenant;
+package com.vendora.core.usecase;
 
-import com.vendora.core.model.tenant.Tenant;
-import com.vendora.core.model.tenant.gateways.TenantRepository;
-import com.vendora.core.usecase.tenant.dto.CreateTenantDTO;
+import com.vendora.core.model.Tenant;
+import com.vendora.core.model.gateway.TenantRepository;
+import com.vendora.core.usecase.dto.CreateTenantDTO;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 

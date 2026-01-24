@@ -1,7 +1,7 @@
 package com.vendora.core.r2dbc;
 
-import com.vendora.core.model.productcategory.ProductCategory;
-import com.vendora.core.model.productcategory.gateways.ProductCategoryRepository;
+import com.vendora.core.model.ProductCategory;
+import com.vendora.core.model.gateway.ProductCategoryRepository;
 import com.vendora.core.r2dbc.entity.ProductCategoryEntity;
 import com.vendora.core.r2dbc.helper.ReactiveAdapterOperations;
 import org.reactivecommons.utils.ObjectMapper;

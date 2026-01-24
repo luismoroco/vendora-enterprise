@@ -1,4 +1,4 @@
-package com.vendora.core.usecase.brand.dto;
+package com.vendora.core.usecase.dto;
 
 import lombok.*;
 

@@ -1,7 +1,7 @@
 package com.vendora.core.api;
 
-import com.vendora.core.usecase.brand.BrandUseCase;
-import com.vendora.core.usecase.brand.dto.CreateBrandDTO;
+import com.vendora.core.usecase.BrandUseCase;
+import com.vendora.core.usecase.dto.CreateBrandDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

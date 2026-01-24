@@ -1,4 +1,4 @@
-package com.vendora.core.usecase.product;
+package com.vendora.core.usecase;
 
 import lombok.RequiredArgsConstructor;
 

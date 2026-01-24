@@ -1,7 +1,7 @@
-package com.vendora.core.usecase.user;
+package com.vendora.core.usecase;
 
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class UserUseCase {
+public class ProviderUseCase {
 }

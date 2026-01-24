@@ -1,4 +1,4 @@
-package com.vendora.core.model.product;
+package com.vendora.core.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

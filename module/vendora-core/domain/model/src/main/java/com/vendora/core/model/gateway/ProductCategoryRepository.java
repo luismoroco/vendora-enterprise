@@ -1,6 +1,6 @@
-package com.vendora.core.model.productcategory.gateways;
+package com.vendora.core.model.gateway;
 
-import com.vendora.core.model.productcategory.ProductCategory;
+import com.vendora.core.model.ProductCategory;
 import reactor.core.publisher.Mono;
 
 public interface ProductCategoryRepository {
