@@ -19,4 +19,9 @@ public class TenantReactiveRepositoryAdapter extends ReactiveAdapterOperations<T
     public Mono<Boolean> existsByName(String name) {
         return this.repository.existsByName(name);
     }
+
+    @Override
+    public Mono<Boolean> existsByDomain(String domain) {
+        return null;
+    }
 }

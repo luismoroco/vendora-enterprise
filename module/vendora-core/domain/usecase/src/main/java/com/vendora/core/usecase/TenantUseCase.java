@@ -1,10 +1,10 @@
 package com.vendora.core.usecase;
 
-import com.vendora.common.LogCatalog;
-import com.vendora.common.exc.BadRequestException;
 import com.vendora.core.model.Tenant;
 import com.vendora.core.model.gateway.TenantRepository;
 import com.vendora.core.usecase.dto.CreateTenantDTO;
+import com.vendora.core.usecase.dto.UpdateTenantDTO;
+import com.vendora.core.usecase.service.TenantService;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
@@ -12,20 +12,41 @@ import reactor.core.publisher.Mono;
 public class TenantUseCase {
 
     private final TenantRepository repository;
+    private final TenantService service;
 
-    Mono<Tenant> create(CreateTenantDTO dto) {
-        return this.repository.existsByName(dto.getName())
-            .flatMap(flag -> flag.equals(Boolean.TRUE)
-                ? Mono.error(new BadRequestException(LogCatalog.ENTITY_ALREADY_EXISTS.of(Tenant.TYPE)))
-                : Mono.empty()
-            )
-            .then(Mono.defer(() -> {
-                Tenant tenant = Tenant.builder()
+    public Mono<Tenant> createTenant(CreateTenantDTO dto) {
+        return this.service.verifyTenantNameUniquenessOrThrow(dto.getName())
+            .then(this.repository.save(
+                Tenant.builder()
                     .name(dto.getName())
                     .domain(dto.getDomain())
-                    .build();
+                    .build()
+          ));
+    }
 
-                return this.repository.save(tenant);
-            }));
+    public Mono<Tenant> updateTenant(UpdateTenantDTO dto) {
+        return this.service.findByTenantIdOrThrow(dto.getTenantId())
+            .flatMap(tenant ->
+                Mono.justOrEmpty(dto.getName())
+                    .filter(name -> !name.equals(tenant.getName()))
+                    .flatMap(name ->
+                        this.service.verifyTenantNameUniquenessOrThrow(name)
+                            .doOnSuccess(__ -> tenant.setName(name))
+                            .thenReturn(tenant)
+                    )
+                    .defaultIfEmpty(tenant)
+            )
+            .flatMap(tenant ->
+                Mono.justOrEmpty(dto.getDomain())
+                    .filter(domain -> !domain.equals(tenant.getDomain()))
+                    .flatMap(domain ->
+                        this.service.verifyDomainUniquenessOrThrow(domain)
+                            .thenReturn(domain)
+                    )
+                    .doOnNext(tenant::setDomain)
+                    .thenReturn(tenant)
+                    .defaultIfEmpty(tenant)
+            )
+            .flatMap(this.repository::save);
     }
 }

@@ -7,5 +7,9 @@ public interface TenantRepository {
 
     Mono<Boolean> existsByName(String name);
 
-    Mono<Tenant> save(Tenant tenant);
+    Mono<Tenant>  save(Tenant tenant);
+
+    Mono<Tenant>  findById(Long tenantId);
+
+    Mono<Boolean> existsByDomain(String domain);
 }
