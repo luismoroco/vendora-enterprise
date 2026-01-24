@@ -8,8 +8,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor()
-@AllArgsConstructor()
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder(toBuilder = true)
 public class Tenant {
 
