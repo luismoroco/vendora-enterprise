@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: trigram-index-extension
+      author: vendora.dev
+      changes:
+        - sql:
+            splitStatements: false
+            stripComments: true
+            dbms: postgresql
+            sql: |
+              CREATE EXTENSION IF NOT EXISTS pg_trgm;

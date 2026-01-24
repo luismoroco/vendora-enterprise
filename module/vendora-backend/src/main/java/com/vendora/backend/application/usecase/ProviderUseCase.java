@@ -1,6 +1,6 @@
 package com.vendora.backend.application.usecase;
 
-import com.vendora.backend.application.usecase.service.ProviderService;
+import com.vendora.backend.application.service.ProviderService;
 import com.vendora.backend.common.exc.BadRequestException;
 import com.vendora.backend.application.entity.Provider;
 import com.vendora.backend.application.repository.ProviderRepository;

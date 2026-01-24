@@ -2,7 +2,7 @@ package com.vendora.backend.application.usecase;
 
 import com.vendora.backend.application.entity.Brand;
 import com.vendora.backend.application.repository.BrandRepository;
-import com.vendora.backend.application.usecase.service.BrandService;
+import com.vendora.backend.application.service.BrandService;
 import com.vendora.backend.application.usecase.request.CreateBrandRequest;
 import com.vendora.backend.application.usecase.request.GetBrandsRequest;
 import com.vendora.backend.application.usecase.request.UpdateBrandRequest;
@@ -12,7 +12,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Objects;
 
 @Service

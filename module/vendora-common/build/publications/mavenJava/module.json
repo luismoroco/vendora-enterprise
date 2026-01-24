@@ -1,0 +1,155 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.vendora",
+    "module": "vendora-common",
+    "version": "1.0.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.13"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 21,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "org.springframework",
+          "module": "spring-webflux",
+          "version": {
+            "requires": "6.2.9"
+          }
+        },
+        {
+          "group": "io.projectreactor",
+          "module": "reactor-core",
+          "version": {
+            "requires": "3.7.8"
+          }
+        },
+        {
+          "group": "org.modelmapper",
+          "module": "modelmapper",
+          "version": {
+            "requires": "3.2.0"
+          }
+        },
+        {
+          "group": "jakarta.validation",
+          "module": "jakarta.validation-api",
+          "version": {
+            "requires": "3.0.2"
+          }
+        },
+        {
+          "group": "org.hibernate.validator",
+          "module": "hibernate-validator",
+          "version": {
+            "requires": "8.0.1.Final"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "vendora-common-1.0.0.jar",
+          "url": "vendora-common-1.0.0.jar",
+          "size": 8129,
+          "sha512": "b6dbddba2ff2d3b749c28bc303884942279a72a21ff68d6c9659437e3619ec0a88a314d5601d31871c8b7e026c20e9eeebc5a03b69c98a6005dcae0a271e4c9f",
+          "sha256": "972514573c88970eba6a164e37185db285d09e664aca2aaa08265fb31e8d7235",
+          "sha1": "52fff96767883dc1296a8963a650b39d3d4cd414",
+          "md5": "38e5f629c8298b61da21ef9ff220fa82"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 21,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "org.slf4j",
+          "module": "slf4j-api",
+          "version": {
+            "requires": "2.0.17"
+          }
+        },
+        {
+          "group": "org.aspectj",
+          "module": "aspectjrt",
+          "version": {
+            "requires": "1.9.22.1"
+          }
+        },
+        {
+          "group": "org.springframework",
+          "module": "spring-webflux",
+          "version": {
+            "requires": "6.2.9"
+          }
+        },
+        {
+          "group": "io.projectreactor",
+          "module": "reactor-core",
+          "version": {
+            "requires": "3.7.8"
+          }
+        },
+        {
+          "group": "org.modelmapper",
+          "module": "modelmapper",
+          "version": {
+            "requires": "3.2.0"
+          }
+        },
+        {
+          "group": "jakarta.validation",
+          "module": "jakarta.validation-api",
+          "version": {
+            "requires": "3.0.2"
+          }
+        },
+        {
+          "group": "org.hibernate.validator",
+          "module": "hibernate-validator",
+          "version": {
+            "requires": "8.0.1.Final"
+          }
+        },
+        {
+          "group": "org.glassfish",
+          "module": "jakarta.el",
+          "version": {
+            "requires": "5.0.0-M1"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "vendora-common-1.0.0.jar",
+          "url": "vendora-common-1.0.0.jar",
+          "size": 8129,
+          "sha512": "b6dbddba2ff2d3b749c28bc303884942279a72a21ff68d6c9659437e3619ec0a88a314d5601d31871c8b7e026c20e9eeebc5a03b69c98a6005dcae0a271e4c9f",
+          "sha256": "972514573c88970eba6a164e37185db285d09e664aca2aaa08265fb31e8d7235",
+          "sha1": "52fff96767883dc1296a8963a650b39d3d4cd414",
+          "md5": "38e5f629c8298b61da21ef9ff220fa82"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+databaseChangeLog:
+  - changeSet:
+      id: product
+      author: vendora.dev
+      changes:
+        - sql:
+            dbms: postgresql
+            sql: |
+              CREATE TYPE product_status_type AS ENUM ('ENABLED', 'DISABLED');
+
+        - createTable:
+            tableName: product
+            columns:
+              - column:
+                  name: product_id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: provider_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: bar_code
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true
+                    unique: true
+              - column:
+                  name: price
+                  type: NUMERIC(12,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: stock
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: product_status_type
+                  type: VARCHAR(25)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: image_url
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: tenant_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+        - addForeignKeyConstraint:
+            baseTableName: product
+            baseColumnNames: provider_id
+            constraintName: fk_product_provider_id_provider
+            referencedTableName: provider
+            referencedColumnNames: provider_id
+
+        - sql:
+            dbms: postgresql
+            sql: |
+              ALTER TABLE product
+              ADD CONSTRAINT check_product_price_positive
+                CHECK (price >= 0) NOT VALID,
+              ADD CONSTRAINT check_product_stock_non_negative
+                CHECK (stock >= 0) NOT VALID;
+
+        - sql:
+            dbms: postgresql
+            sql: |
+              CREATE INDEX index_product_on_barcode ON product (bar_code);
+              
+              CREATE TRIGGER update_product_updated_at
+              BEFORE UPDATE ON product
+              FOR EACH ROW
+              EXECUTE FUNCTION update_updated_at_column();
+
