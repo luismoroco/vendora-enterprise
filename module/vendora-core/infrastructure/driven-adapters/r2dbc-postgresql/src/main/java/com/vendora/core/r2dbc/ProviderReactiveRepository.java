@@ -10,5 +10,11 @@ public interface ProviderReactiveRepository extends ReactiveCrudRepository<Provi
     Mono<ProviderEntity> findByRucAndTenantId(String ruc, Long tenantId);
 
     Mono<Boolean> existsByRucAndTenantId(String ruc, Long tenantId);
+
+    Mono<Boolean> existsByNameAndTenantId(String name, Long tenantId);
+
+    Mono<ProviderEntity> findByProviderIdAndTenantId(Long providerId, Long tenantId);
+
+    Mono<Boolean> existsByProviderIdAndTenantId(Long providerId, Long tenantId);
 }
 

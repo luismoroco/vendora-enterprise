@@ -27,7 +27,17 @@ public class ProviderReactiveRepositoryAdapter extends ReactiveAdapterOperations
 
     @Override
     public Mono<Boolean> existsByNameAndTenantId(String name, Long tenantId) {
-        return null;
+        return this.repository.existsByNameAndTenantId(name, tenantId);
+    }
+
+    @Override
+    public Mono<Provider> findByProviderIdAndTenantId(Long providerId, Long tenantId) {
+        return this.repository.findByProviderIdAndTenantId(providerId, tenantId).map(this::toEntity);
+    }
+
+    @Override
+    public Mono<Boolean> existsByProviderIdAndTenantId(Long providerId, Long tenantId) {
+        return this.repository.existsByProviderIdAndTenantId(providerId, tenantId);
     }
 }
 

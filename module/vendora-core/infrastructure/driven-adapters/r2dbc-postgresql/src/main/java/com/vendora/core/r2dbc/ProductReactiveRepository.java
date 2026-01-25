@@ -10,5 +10,9 @@ public interface ProductReactiveRepository extends ReactiveCrudRepository<Produc
     Mono<ProductEntity> findByBarCodeAndTenantId(String barCode, Long tenantId);
 
     Mono<Boolean> existsByBarCodeAndTenantId(String barCode, Long tenantId);
+
+    Mono<Boolean> existsByNameAndTenantId(String name, Long tenantId);
+
+    Mono<ProductEntity> findByProductIdAndTenantId(Long productId, Long tenantId);
 }
 
