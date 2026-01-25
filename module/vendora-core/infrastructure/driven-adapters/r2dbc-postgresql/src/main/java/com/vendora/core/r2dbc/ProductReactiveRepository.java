@@ -8,8 +8,6 @@ import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
-
 public interface ProductReactiveRepository extends ReactiveCrudRepository<ProductEntity, Long>, ReactiveQueryByExampleExecutor<ProductEntity> {
 
     Mono<ProductEntity> findByBarCodeAndTenantId(String barCode, Long tenantId);
@@ -24,46 +22,45 @@ public interface ProductReactiveRepository extends ReactiveCrudRepository<Produc
         "SELECT DISTINCT p.* FROM product p " +
         "LEFT JOIN product_category_product pcp ON p.product_id = pcp.product_id " +
         "WHERE p.tenant_id = :tenantId " +
-        "AND (:name IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))) " +
-        "AND (:categoryIds IS NULL OR pcp.product_category_id = ANY(:categoryIds)) " +
-        "AND (:brandIds IS NULL OR p.brand_id = ANY(:brandIds)) " +
-        "AND (:providerIds IS NULL OR p.provider_id = ANY(:providerIds)) " +
+        "AND (COALESCE(:name, '') = '' OR LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))) " +
+        "AND (COALESCE(array_length(:categoryIds, 1), 0) = 0 OR pcp.product_category_id = ANY(:categoryIds)) " +
+        "AND (COALESCE(array_length(:brandIds, 1), 0) = 0 OR p.brand_id = ANY(:brandIds)) " +
+        "AND (COALESCE(array_length(:providerIds, 1), 0) = 0 OR p.provider_id = ANY(:providerIds)) " +
         "AND (:barCode IS NULL OR p.bar_code = :barCode) " +
-        "AND (:productStatusTypes IS NULL OR p.product_status_type = ANY(:productStatusTypes)) " +
-        "ORDER BY p.product_id " +
-        "LIMIT COALESCE(:pageSize, 2147483647) OFFSET COALESCE(:offset, 0)"
+        "AND (COALESCE(array_length(:productStatusTypes, 1), 0) = 0 OR p.product_status_type = ANY(:productStatusTypes)) " +
+        "LIMIT :pageSize OFFSET :offset"
     )
     Flux<ProductEntity> findProducts(
         @Param("tenantId") Long tenantId,
         @Param("name") String name,
-        @Param("categoryIds") List<Long> categoryIds,
-        @Param("brandIds") List<Long> brandIds,
-        @Param("providerIds") List<Long> providerIds,
+        @Param("categoryIds") Long[] categoryIds,
+        @Param("brandIds") Long[] brandIds,
+        @Param("providerIds") Long[] providerIds,
         @Param("barCode") String barCode,
-        @Param("productStatusTypes") List<String> productStatusTypes,
+        @Param("productStatusTypes") String[] productStatusTypes,
         @Param("pageSize") Integer pageSize,
         @Param("offset") Integer offset
     );
 
     @Query(
-        "SELECT COUNT(p.product_id) FROM product p " +
+        "SELECT COUNT(DISTINCT p.product_id) FROM product p " +
         "LEFT JOIN product_category_product pcp ON p.product_id = pcp.product_id " +
         "WHERE p.tenant_id = :tenantId " +
-        "AND (:name IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))) " +
-        "AND (:categoryIds IS NULL OR pcp.product_category_id = ANY(:categoryIds)) " +
-        "AND (:brandIds IS NULL OR p.brand_id = ANY(:brandIds)) " +
-        "AND (:providerIds IS NULL OR p.provider_id = ANY(:providerIds)) " +
+        "AND (COALESCE(:name, '') = '' OR LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))) " +
+        "AND (COALESCE(array_length(:categoryIds, 1), 0) = 0 OR pcp.product_category_id = ANY(:categoryIds)) " +
+        "AND (COALESCE(array_length(:brandIds, 1), 0) = 0 OR p.brand_id = ANY(:brandIds)) " +
+        "AND (COALESCE(array_length(:providerIds, 1), 0) = 0 OR p.provider_id = ANY(:providerIds)) " +
         "AND (:barCode IS NULL OR p.bar_code = :barCode) " +
-        "AND (:productStatusTypes IS NULL OR p.product_status_type = ANY(:productStatusTypes))"
+        "AND (COALESCE(array_length(:productStatusTypes, 1), 0) = 0 OR p.product_status_type = ANY(:productStatusTypes))"
     )
     Mono<Integer> countProducts(
         @Param("tenantId") Long tenantId,
         @Param("name") String name,
-        @Param("categoryIds") List<Long> categoryIds,
-        @Param("brandIds") List<Long> brandIds,
-        @Param("providerIds") List<Long> providerIds,
+        @Param("categoryIds") Long[] categoryIds,
+        @Param("brandIds") Long[] brandIds,
+        @Param("providerIds") Long[] providerIds,
         @Param("barCode") String barCode,
-        @Param("productStatusTypes") List<String> productStatusTypes
+        @Param("productStatusTypes") String[] productStatusTypes
     );
 }
 

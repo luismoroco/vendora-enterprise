@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -57,13 +56,13 @@ public class ProductReactiveRepositoryAdapter extends ReactiveAdapterOperations<
         return this.repository.findProducts(
             tenantId,
             name == null ? "" : name,
-            categoryIds == null || categoryIds.isEmpty() ? Collections.emptyList() : categoryIds,
-            brandIds == null || brandIds.isEmpty() ? Collections.emptyList() : brandIds,
-            providerIds == null || providerIds.isEmpty() ? Collections.emptyList() : providerIds,
+            categoryIds == null || categoryIds.isEmpty() ? new Long[0] : categoryIds.toArray(new Long[0]),
+            brandIds == null || brandIds.isEmpty() ? new Long[0] : brandIds.toArray(new Long[0]),
+            providerIds == null || providerIds.isEmpty() ? new Long[0] : providerIds.toArray(new Long[0]),
             barCode,
             productStatusTypes == null || productStatusTypes.isEmpty()
-                ? Collections.emptyList()
-                : EnumUtils.names(productStatusTypes),
+                ? new String[0]
+                : EnumUtils.names(productStatusTypes).toArray(new String[0]),
             pageSize,
             Paginator.getOffset(page, pageSize)
         ).map(this::toEntity);
@@ -82,13 +81,13 @@ public class ProductReactiveRepositoryAdapter extends ReactiveAdapterOperations<
         return this.repository.countProducts(
             tenantId,
             name == null ? "" : name,
-            categoryIds == null || categoryIds.isEmpty() ? Collections.emptyList() : categoryIds,
-            brandIds == null || brandIds.isEmpty() ? Collections.emptyList() : brandIds,
-            providerIds == null || providerIds.isEmpty() ? Collections.emptyList() : providerIds,
+            categoryIds == null || categoryIds.isEmpty() ? new Long[0] : categoryIds.toArray(new Long[0]),
+            brandIds == null || brandIds.isEmpty() ? new Long[0] : brandIds.toArray(new Long[0]),
+            providerIds == null || providerIds.isEmpty() ? new Long[0] : providerIds.toArray(new Long[0]),
             barCode,
             productStatusTypes == null || productStatusTypes.isEmpty()
-                ? Collections.emptyList()
-                : EnumUtils.names(productStatusTypes)
+                ? new String[0]
+                : EnumUtils.names(productStatusTypes).toArray(new String[0])
         );
     }
 }
