@@ -1,8 +1,8 @@
 package com.vendora.core.api;
 
-import com.vendora.core.usecase.BrandUseCase;
-import com.vendora.core.usecase.dto.CreateBrandDTO;
-import com.vendora.core.usecase.dto.UpdateBrandDTO;
+import com.vendora.core.usecase.ProductUseCase;
+import com.vendora.core.usecase.dto.CreateProductDTO;
+import com.vendora.core.usecase.dto.UpdateProductDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,13 +13,13 @@ import reactor.core.publisher.Mono;
 
 @Component
 @RequiredArgsConstructor
-public class BrandHandler {
+public class ProductHandler {
 
-    private final BrandUseCase useCase;
+    private final ProductUseCase useCase;
 
-    public Mono<ServerResponse> createBrand(ServerRequest serverRequest) {
-        return serverRequest.bodyToMono(CreateBrandDTO.class)
-            .flatMap(this.useCase::createBrand)
+    public Mono<ServerResponse> createProduct(ServerRequest serverRequest) {
+        return serverRequest.bodyToMono(CreateProductDTO.class)
+            .flatMap(this.useCase::createProduct)
             .flatMap(dto -> ServerResponse
                 .status(HttpStatus.CREATED)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -27,9 +27,9 @@ public class BrandHandler {
             );
     }
 
-    public Mono<ServerResponse> updateBrand(ServerRequest serverRequest) {
-        return serverRequest.bodyToMono(UpdateBrandDTO.class)
-            .flatMap(this.useCase::updateBrand)
+    public Mono<ServerResponse> updateProduct(ServerRequest serverRequest) {
+        return serverRequest.bodyToMono(UpdateProductDTO.class)
+            .flatMap(this.useCase::updateProduct)
             .flatMap(dto -> ServerResponse
                 .status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -37,3 +37,4 @@ public class BrandHandler {
             );
     }
 }
+

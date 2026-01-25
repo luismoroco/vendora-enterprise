@@ -12,13 +12,14 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 
 @Configuration
 @RequiredArgsConstructor
-public class BrandRouterRest {
+public class ProductRouterRest {
 
-    private final BrandHandler handler;
+    private final ProductHandler handler;
 
     @Bean
     public RouterFunction<ServerResponse> router() {
-        return route(POST("/api/v1/brands"), this.handler::createBrand)
-            .andRoute(PUT("/api/v1/brands"), this.handler::updateBrand);
+        return route(POST("/api/v1/products"), this.handler::createProduct)
+            .andRoute(PUT("/api/v1/products"), this.handler::updateProduct);
     }
 }
+
