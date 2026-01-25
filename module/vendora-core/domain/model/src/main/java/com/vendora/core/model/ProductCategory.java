@@ -13,6 +13,8 @@ import lombok.Setter;
 @Builder(toBuilder = true)
 public class ProductCategory {
 
+    public static final String TYPE = "ProductCategory";
+
     private Long    productCategoryId;
     private String  name;
     private Boolean featured;

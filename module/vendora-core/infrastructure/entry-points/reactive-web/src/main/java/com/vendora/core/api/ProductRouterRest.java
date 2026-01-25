@@ -18,8 +18,9 @@ public class ProductRouterRest {
     @Bean
     public RouterFunction<ServerResponse> productRouter() {
         return route(POST("/api/v1/products"), this.handler::createProduct)
-            .andRoute(PUT("/api/v1/products"), this.handler::updateProduct)
-            .andRoute(GET("/api/v1/products/{productId}"), this.handler::getProduct);
+            .andRoute(PUT("/api/v1/products/{product-id}"), this.handler::updateProduct)
+            .andRoute(GET("/api/v1/products/{product-id}"), this.handler::getProduct)
+            .andRoute(GET("/api/v1/products"), this.handler::getProducts);
     }
 }
 

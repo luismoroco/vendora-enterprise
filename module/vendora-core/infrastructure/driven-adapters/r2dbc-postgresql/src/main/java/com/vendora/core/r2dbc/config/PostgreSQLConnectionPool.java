@@ -6,6 +6,7 @@ import io.r2dbc.postgresql.PostgresqlConnectionConfiguration;
 import io.r2dbc.postgresql.PostgresqlConnectionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.r2dbc.core.DatabaseClient;
 
 import java.time.Duration;
 
@@ -37,5 +38,10 @@ public class PostgreSQLConnectionPool {
                 .build();
 
 		return new ConnectionPool(poolConfiguration);
+	}
+
+	@Bean
+	public DatabaseClient databaseClient(ConnectionPool connectionPool) {
+		return DatabaseClient.create(connectionPool);
 	}
 }

@@ -1,12 +1,19 @@
 package com.vendora.core.r2dbc;
 
+import com.vendora.common.EnumUtils;
+import com.vendora.common.Paginator;
 import com.vendora.core.model.Product;
+import com.vendora.core.model.ProductStatusType;
 import com.vendora.core.model.gateway.ProductRepository;
 import com.vendora.core.r2dbc.entity.ProductEntity;
 import com.vendora.core.r2dbc.helper.ReactiveAdapterOperations;
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.Collections;
+import java.util.List;
 
 @Repository
 public class ProductReactiveRepositoryAdapter extends ReactiveAdapterOperations<Product, ProductEntity, Long, ProductReactiveRepository> implements ProductRepository {
@@ -33,6 +40,56 @@ public class ProductReactiveRepositoryAdapter extends ReactiveAdapterOperations<
     @Override
     public Mono<Product> findByProductIdAndTenantId(Long productId, Long tenantId) {
         return this.repository.findByProductIdAndTenantId(productId, tenantId).map(this::toEntity);
+    }
+
+    @Override
+    public Flux<Product> findProducts(
+        Long tenantId,
+        String name,
+        String barCode,
+        List<Long> providerIds,
+        List<Long> brandIds,
+        List<Long> categoryIds,
+        List<ProductStatusType> productStatusTypes,
+        Integer page,
+        Integer pageSize
+    ) {
+        return this.repository.findProducts(
+            tenantId,
+            name == null ? "" : name,
+            categoryIds == null || categoryIds.isEmpty() ? Collections.emptyList() : categoryIds,
+            brandIds == null || brandIds.isEmpty() ? Collections.emptyList() : brandIds,
+            providerIds == null || providerIds.isEmpty() ? Collections.emptyList() : providerIds,
+            barCode,
+            productStatusTypes == null || productStatusTypes.isEmpty()
+                ? Collections.emptyList()
+                : EnumUtils.names(productStatusTypes),
+            pageSize,
+            Paginator.getOffset(page, pageSize)
+        ).map(this::toEntity);
+    }
+
+    @Override
+    public Mono<Integer> countProducts(
+        Long tenantId,
+        String name,
+        String barCode,
+        List<Long> providerIds,
+        List<Long> brandIds,
+        List<Long> categoryIds,
+        List<ProductStatusType> productStatusTypes
+    ) {
+        return this.repository.countProducts(
+            tenantId,
+            name == null ? "" : name,
+            categoryIds == null || categoryIds.isEmpty() ? Collections.emptyList() : categoryIds,
+            brandIds == null || brandIds.isEmpty() ? Collections.emptyList() : brandIds,
+            providerIds == null || providerIds.isEmpty() ? Collections.emptyList() : providerIds,
+            barCode,
+            productStatusTypes == null || productStatusTypes.isEmpty()
+                ? Collections.emptyList()
+                : EnumUtils.names(productStatusTypes)
+        );
     }
 }
 

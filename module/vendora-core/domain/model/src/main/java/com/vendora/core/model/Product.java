@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 @Builder(toBuilder = true)
 public class Product {
 
-    public  static final String TYPE = "Product";
+    public static final String TYPE = "Product";
 
     private Long       productId;
     private Long       providerId;

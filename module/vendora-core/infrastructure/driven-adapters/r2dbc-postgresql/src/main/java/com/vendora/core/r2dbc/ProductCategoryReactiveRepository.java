@@ -10,5 +10,9 @@ public interface ProductCategoryReactiveRepository extends ReactiveCrudRepositor
     Mono<ProductCategoryEntity> findByNameAndTenantId(String name, Long tenantId);
 
     Mono<Boolean> existsByNameAndTenantId(String name, Long tenantId);
+
+    Mono<ProductCategoryEntity> findByProductCategoryIdAndTenantId(Long productCategoryId, Long tenantId);
+
+    Mono<Boolean> existsByProductCategoryIdAndTenantId(Long productCategoryId, Long tenantId);
 }
 

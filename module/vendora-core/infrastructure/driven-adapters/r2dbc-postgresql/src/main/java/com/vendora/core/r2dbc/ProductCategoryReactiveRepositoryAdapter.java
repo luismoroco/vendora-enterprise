@@ -24,5 +24,20 @@ public class ProductCategoryReactiveRepositoryAdapter extends ReactiveAdapterOpe
     public Mono<Boolean> existsByNameAndTenantId(String name, Long tenantId) {
         return this.repository.existsByNameAndTenantId(name, tenantId);
     }
+
+    @Override
+    public Mono<ProductCategory> findByProductCategoryIdAndTenantId(Long productCategoryId, Long tenantId) {
+        return this.repository.findByProductCategoryIdAndTenantId(productCategoryId, tenantId).map(this::toEntity);
+    }
+
+    @Override
+    public Mono<Boolean> existsByProductCategoryIdAndTenantId(Long productCategoryId, Long tenantId) {
+        return this.repository.existsByProductCategoryIdAndTenantId(productCategoryId, tenantId);
+    }
+
+    @Override
+    public Mono<ProductCategory> findByProductCategoryId(Long productCategoryId) {
+        return this.repository.findById(productCategoryId).map(this::toEntity);
+    }
 }
 

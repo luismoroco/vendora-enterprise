@@ -10,4 +10,10 @@ public interface ProductCategoryRepository {
     Mono<ProductCategory> findByNameAndTenantId(String name, Long tenantId);
 
     Mono<Boolean> existsByNameAndTenantId(String name, Long tenantId);
+
+    Mono<ProductCategory> findByProductCategoryIdAndTenantId(Long productCategoryId, Long tenantId);
+
+    Mono<Boolean> existsByProductCategoryIdAndTenantId(Long productCategoryId, Long tenantId);
+
+    Mono<ProductCategory> findByProductCategoryId(Long productCategoryId);
 }

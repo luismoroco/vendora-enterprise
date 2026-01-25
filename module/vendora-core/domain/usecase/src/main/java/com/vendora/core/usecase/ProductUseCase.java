@@ -6,11 +6,13 @@ import com.vendora.core.model.gateway.ProductRepository;
 import com.vendora.core.model.gateway.ProviderRepository;
 import com.vendora.core.usecase.dto.CreateProductDTO;
 import com.vendora.core.usecase.dto.GetProductDTO;
+import com.vendora.core.usecase.dto.GetProductsDTO;
 import com.vendora.core.usecase.dto.UpdateProductDTO;
 import com.vendora.core.usecase.service.BrandService;
 import com.vendora.core.usecase.service.ProductService;
 import com.vendora.core.usecase.service.ProviderService;
 import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
@@ -141,5 +143,31 @@ public class ProductUseCase {
                     return product;
               })
           );
+    }
+
+    public Flux<Product> getProducts(GetProductsDTO dto) {
+        return this.repository.findProducts(
+            dto.getTenantId(),
+            dto.getName(),
+            dto.getBarCode(),
+            dto.getProviderIds(),
+            dto.getBrandIds(),
+            dto.getCategoryIds(),
+            dto.getProductStatusTypes(),
+            dto.getPage(),
+            dto.getPageSize()
+        );
+    }
+
+    public Mono<Integer> countProducts(GetProductsDTO dto) {
+        return this.repository.countProducts(
+            dto.getTenantId(),
+            dto.getName(),
+            dto.getBarCode(),
+            dto.getProviderIds(),
+            dto.getBrandIds(),
+            dto.getCategoryIds(),
+            dto.getProductStatusTypes()
+        );
     }
 }
