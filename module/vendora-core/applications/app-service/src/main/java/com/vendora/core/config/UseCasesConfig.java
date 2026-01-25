@@ -7,7 +7,7 @@ import org.springframework.context.annotation.FilterType;
 @Configuration
 @ComponentScan(basePackages = "com.vendora.core.usecase",
         includeFilters = {
-                @ComponentScan.Filter(type = FilterType.REGEX, pattern = "^.+UseCase$")
+                @ComponentScan.Filter(type = FilterType.REGEX, pattern = "^.+(UseCase|Service)$")
         },
         useDefaultFilters = false)
 public class UseCasesConfig {
