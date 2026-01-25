@@ -17,7 +17,7 @@ public class BrandRouterRest {
     private final BrandHandler handler;
 
     @Bean
-    public RouterFunction<ServerResponse> router() {
+    public RouterFunction<ServerResponse> brandRouter() {
         return route(POST("/api/v1/brands"), this.handler::createBrand)
             .andRoute(PUT("/api/v1/brands"), this.handler::updateBrand);
     }

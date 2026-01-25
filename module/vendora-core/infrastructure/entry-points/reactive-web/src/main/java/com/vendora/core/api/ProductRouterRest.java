@@ -17,7 +17,7 @@ public class ProductRouterRest {
     private final ProductHandler handler;
 
     @Bean
-    public RouterFunction<ServerResponse> router() {
+    public RouterFunction<ServerResponse> productRouter() {
         return route(POST("/api/v1/products"), this.handler::createProduct)
             .andRoute(PUT("/api/v1/products"), this.handler::updateProduct);
     }

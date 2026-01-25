@@ -17,7 +17,7 @@ public class TenantRouterRest {
     private final TenantHandler handler;
 
     @Bean
-    public RouterFunction<ServerResponse> router() {
+    public RouterFunction<ServerResponse> tenantRouter() {
         return route(POST("/api/v1/tenants"), this.handler::createTenant)
             .andRoute(PUT("/api/v1/tenants"), this.handler::updateTenant);
     }

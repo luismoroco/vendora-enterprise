@@ -17,7 +17,7 @@ public class ProviderRouterRest {
     private final ProviderHandler handler;
 
     @Bean
-    public RouterFunction<ServerResponse> router() {
+    public RouterFunction<ServerResponse> providerRouter() {
         return route(POST("/api/v1/providers"), this.handler::createProvider)
             .andRoute(PUT("/api/v1/providers"), this.handler::updateProvider);
     }
