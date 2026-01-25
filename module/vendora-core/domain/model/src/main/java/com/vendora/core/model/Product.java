@@ -23,14 +23,10 @@ public class Product {
     private String     barCode;
     private BigDecimal price;
     private Integer    stock;
-    private Integer    productStatusTypeId;
+    private ProductStatusType    productStatusType;
     private String     imageUrl;
     private Long       tenantId;
     private BigDecimal cost;
     private String     description;
     private Long       brandId;
-
-    public void setProductStatusType(ProductStatusType productStatusType) {
-        this.productStatusTypeId = productStatusType.getValue();
-    }
 }

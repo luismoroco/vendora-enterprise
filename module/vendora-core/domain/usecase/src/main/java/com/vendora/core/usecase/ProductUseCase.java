@@ -23,23 +23,21 @@ public class ProductUseCase {
           .then(this.service.verifyBarCodeUniquenessWithinTenantOrThrow(dto.getBarCode(), dto.getTenantId()))
           .then(this.providerService.existsByProviderIdAndTenantIdOrThrow(dto.getProviderId(), dto.getTenantId()))
           .then(this.brandService.existsByBrandIdAndTenantIdOrThrow(dto.getBrandId(), dto.getTenantId()))
-          .then(Mono.defer(() -> {
-              Product product = new Product();
-              product.setName(dto.getName());
-              product.setProviderId(dto.getProviderId());
-              product.setDescription(dto.getDescription());
-              product.setBarCode(dto.getBarCode());
-              product.setPrice(dto.getPrice());
-              product.setStock(dto.getStock());
-              product.setProductStatusType(dto.getProductStatusType());
-              product.setImageUrl(dto.getImageUrl());
-              product.setTenantId(dto.getTenantId());
-              product.setCost(dto.getCost());
-              product.setBrandId(dto.getBrandId());
-
-              return Mono.just(product);
-          }))
-          .flatMap(this.repository::save);
+          .then(this.repository.save(
+              Product.builder()
+                .name(dto.getName())
+                .barCode(dto.getBarCode())
+                .tenantId(dto.getTenantId())
+                .description(dto.getDescription())
+                .imageUrl(dto.getImageUrl())
+                .productStatusType(dto.getProductStatusType())
+                .imageUrl(dto.getImageUrl())
+                .tenantId(dto.getTenantId())
+                .cost(dto.getCost())
+                .brandId(dto.getBrandId())
+                .providerId(dto.getProviderId())
+                .build()
+          ));
     }
 
     public Mono<Product> updateProduct(UpdateProductDTO dto) {
