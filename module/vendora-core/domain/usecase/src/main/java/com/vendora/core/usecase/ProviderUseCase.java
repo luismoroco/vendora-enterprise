@@ -18,12 +18,12 @@ public class ProviderUseCase {
         return this.service.verifyProviderNameUniquenessWithinTenantOrThrow(dto.getName(), dto.getTenantId())
             .then(this.repository.save(
                 Provider.builder()
-                  .name(dto.getName())
-                  .ruc(dto.getRuc())
-                  .phone(dto.getPhone())
-                  .email(dto.getEmail())
-                  .tenantId(dto.getTenantId())
-                  .build()
+                    .name(dto.getName())
+                    .ruc(dto.getRuc())
+                    .phone(dto.getPhone())
+                    .email(dto.getEmail())
+                    .tenantId(dto.getTenantId())
+                    .build()
             ));
     }
 

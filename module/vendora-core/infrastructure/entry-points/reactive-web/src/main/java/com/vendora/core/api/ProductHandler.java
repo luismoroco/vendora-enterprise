@@ -44,6 +44,7 @@ public class ProductHandler {
         return serverRequest.bodyToMono(GetProductDTO.class)
             .map(request -> {
                 request.setProductId(Long.valueOf(serverRequest.pathVariable(PRODUCT_ID)));
+
                 return request;
             })
             .flatMap(this.useCase::getProduct)

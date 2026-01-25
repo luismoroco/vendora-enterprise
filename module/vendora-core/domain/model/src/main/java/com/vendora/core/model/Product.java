@@ -23,7 +23,7 @@ public class Product {
     private String     barCode;
     private BigDecimal price;
     private Integer    stock;
-    private ProductStatusType    productStatusType;
+    private ProductStatusType productStatusType;
     private String     imageUrl;
     private Long       tenantId;
     private BigDecimal cost;
