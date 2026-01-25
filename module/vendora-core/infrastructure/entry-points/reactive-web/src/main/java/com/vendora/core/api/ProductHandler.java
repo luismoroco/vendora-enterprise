@@ -2,6 +2,7 @@ package com.vendora.core.api;
 
 import com.vendora.core.usecase.ProductUseCase;
 import com.vendora.core.usecase.dto.CreateProductDTO;
+import com.vendora.core.usecase.dto.GetProductDTO;
 import com.vendora.core.usecase.dto.UpdateProductDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,8 @@ import reactor.core.publisher.Mono;
 @Component
 @RequiredArgsConstructor
 public class ProductHandler {
+
+    private static final String PRODUCT_ID = "productId";
 
     private final ProductUseCase useCase;
 
@@ -30,6 +33,20 @@ public class ProductHandler {
     public Mono<ServerResponse> updateProduct(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(UpdateProductDTO.class)
             .flatMap(this.useCase::updateProduct)
+            .flatMap(dto -> ServerResponse
+                .status(HttpStatus.OK)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(dto)
+            );
+    }
+
+    public Mono<ServerResponse> getProduct(ServerRequest serverRequest) {
+        return serverRequest.bodyToMono(GetProductDTO.class)
+            .map(request -> {
+                request.setProductId(Long.valueOf(serverRequest.pathVariable(PRODUCT_ID)));
+                return request;
+            })
+            .flatMap(this.useCase::getProduct)
             .flatMap(dto -> ServerResponse
                 .status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)

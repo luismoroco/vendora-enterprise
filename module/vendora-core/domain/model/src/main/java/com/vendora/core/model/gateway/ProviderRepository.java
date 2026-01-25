@@ -16,4 +16,6 @@ public interface ProviderRepository {
     Mono<Provider> findByProviderIdAndTenantId(Long providerId, Long tenantId);
 
     Mono<Boolean> existsByProviderIdAndTenantId(Long providerId, Long tenantId);
+
+    Mono<Provider> findByProviderId(Long providerId);
 }

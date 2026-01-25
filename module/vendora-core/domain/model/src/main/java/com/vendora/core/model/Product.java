@@ -29,4 +29,7 @@ public class Product {
     private BigDecimal cost;
     private String     description;
     private Long       brandId;
+
+    private Provider   provider;
+    private Brand      brand;
 }

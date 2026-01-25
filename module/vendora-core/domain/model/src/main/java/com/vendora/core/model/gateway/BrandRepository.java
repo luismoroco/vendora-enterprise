@@ -14,4 +14,6 @@ public interface BrandRepository {
     Mono<Brand> findByBrandIdAndTenantId(Long brandId, Long tenantId);
 
     Mono<Boolean> existsByBrandIdAndTenantId(Long brandId, Long tenantId);
+
+    Mono<Brand> findByBrandId(Long brandId);
 }

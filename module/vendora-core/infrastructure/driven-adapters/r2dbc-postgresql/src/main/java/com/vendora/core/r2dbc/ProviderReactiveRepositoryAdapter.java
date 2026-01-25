@@ -39,5 +39,10 @@ public class ProviderReactiveRepositoryAdapter extends ReactiveAdapterOperations
     public Mono<Boolean> existsByProviderIdAndTenantId(Long providerId, Long tenantId) {
         return this.repository.existsByProviderIdAndTenantId(providerId, tenantId);
     }
+
+    @Override
+    public Mono<Provider> findByProviderId(Long providerId) {
+        return this.repository.findById(providerId).map(this::toEntity);
+    }
 }
 

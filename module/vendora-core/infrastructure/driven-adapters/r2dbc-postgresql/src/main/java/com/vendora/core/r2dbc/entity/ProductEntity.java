@@ -2,6 +2,7 @@ package com.vendora.core.r2dbc.entity;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.math.BigDecimal;
@@ -27,5 +28,11 @@ public class ProductEntity {
     private BigDecimal cost;
     private String description;
     private Long brandId;
+
+    @Transient
+    private ProviderEntity provider;
+
+    @Transient
+    private BrandEntity brand;
 }
 

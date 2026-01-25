@@ -18,7 +18,7 @@ public class BrandService {
             .switchIfEmpty(Mono.error(new NotFoundException(LogCatalog.ENTITY_NOT_FOUND.of(Brand.TYPE))));
     }
 
-    public Mono<Void> verifyNameUniquenessWithinTenantOrThrow(String name, Long tenantId) {
+    public Mono<Void> requireUniqueBrandName(String name, Long tenantId) {
         return this.repository.existsByNameAndTenantId(name, tenantId)
             .flatMap(flag -> flag.equals(Boolean.TRUE)
                 ? Mono.error(new BadRequestException(LogCatalog.ENTITY_ALREADY_EXISTS.of(Brand.TYPE)))

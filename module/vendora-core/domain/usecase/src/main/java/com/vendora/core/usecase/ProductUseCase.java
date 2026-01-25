@@ -1,8 +1,11 @@
 package com.vendora.core.usecase;
 
 import com.vendora.core.model.Product;
+import com.vendora.core.model.gateway.BrandRepository;
 import com.vendora.core.model.gateway.ProductRepository;
+import com.vendora.core.model.gateway.ProviderRepository;
 import com.vendora.core.usecase.dto.CreateProductDTO;
+import com.vendora.core.usecase.dto.GetProductDTO;
 import com.vendora.core.usecase.dto.UpdateProductDTO;
 import com.vendora.core.usecase.service.BrandService;
 import com.vendora.core.usecase.service.ProductService;
@@ -17,6 +20,8 @@ public class ProductUseCase {
     private final ProductService service;
     private final ProviderService providerService;
     private final BrandService brandService;
+    private final ProviderRepository providerRepository;
+    private final BrandRepository brandRepository;
 
     public Mono<Product> createProduct(CreateProductDTO dto) {
         return this.service.verifyProductNameUniquenessWithinTenantOrThrow(dto.getName(), dto.getTenantId())
@@ -120,5 +125,21 @@ public class ProductUseCase {
                     .defaultIfEmpty(product)
             )
             .flatMap(this.repository::save);
+    }
+
+    public Mono<Product> getProduct(GetProductDTO dto) {
+        return this.service.findByProductIdAndTenantIdOrThrow(dto.getProductId(), dto.getTenantId())
+            .flatMap(product ->
+                Mono.zip(
+                    this.providerRepository.findByProviderId(product.getProviderId()),
+                    this.brandRepository.findByBrandId(product.getBrandId())
+                )
+                .map(tuple -> {
+                    product.setProvider(tuple.getT1());
+                    product.setBrand(tuple.getT2());
+
+                    return product;
+              })
+          );
     }
 }

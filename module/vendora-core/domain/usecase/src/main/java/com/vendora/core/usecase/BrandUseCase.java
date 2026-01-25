@@ -15,7 +15,7 @@ public class BrandUseCase {
     private final BrandService service;
 
     public Mono<Brand> createBrand(CreateBrandDTO dto) {
-        return this.service.verifyNameUniquenessWithinTenantOrThrow(dto.getName(), dto.getTenantId())
+        return this.service.requireUniqueBrandName(dto.getName(), dto.getTenantId())
             .then(this.repository.save(
                 Brand.builder()
                     .name(dto.getName())
@@ -31,7 +31,7 @@ public class BrandUseCase {
                 Mono.justOrEmpty(dto.getName())
                     .filter(name -> !name.equals(brand.getName()))
                     .flatMap(name ->
-                        this.service.verifyNameUniquenessWithinTenantOrThrow(name, dto.getTenantId())
+                        this.service.requireUniqueBrandName(name, dto.getTenantId())
                             .doOnSuccess(__ -> brand.setName(name))
                             .thenReturn(brand)
                     )

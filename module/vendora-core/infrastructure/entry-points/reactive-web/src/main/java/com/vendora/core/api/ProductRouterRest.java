@@ -6,8 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
-import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
-import static org.springframework.web.reactive.function.server.RequestPredicates.PUT;
+import static org.springframework.web.reactive.function.server.RequestPredicates.*;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 @Configuration
@@ -19,7 +18,8 @@ public class ProductRouterRest {
     @Bean
     public RouterFunction<ServerResponse> productRouter() {
         return route(POST("/api/v1/products"), this.handler::createProduct)
-            .andRoute(PUT("/api/v1/products"), this.handler::updateProduct);
+            .andRoute(PUT("/api/v1/products"), this.handler::updateProduct)
+            .andRoute(GET("/api/v1/products/{productId}"), this.handler::getProduct);
     }
 }
 
