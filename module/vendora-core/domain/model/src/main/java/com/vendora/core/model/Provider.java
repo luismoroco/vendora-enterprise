@@ -13,6 +13,8 @@ import lombok.Setter;
 @Builder(toBuilder = true)
 public class Provider {
 
+    public static final String TYPE = "Provider";
+
     private Long   providerId;
     private String name;
     private String ruc;

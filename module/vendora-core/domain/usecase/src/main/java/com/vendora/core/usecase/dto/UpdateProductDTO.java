@@ -1,10 +1,7 @@
-package com.vendora.core.model;
+package com.vendora.core.usecase.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.vendora.core.model.ProductStatusType;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -13,9 +10,8 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class Product {
-
-    public  static final String TYPE = "Product";
+@ToString
+public class UpdateProductDTO {
 
     private Long       productId;
     private Long       providerId;
@@ -23,14 +19,10 @@ public class Product {
     private String     barCode;
     private BigDecimal price;
     private Integer    stock;
-    private Integer    productStatusTypeId;
+    private ProductStatusType productStatusType;
     private String     imageUrl;
     private Long       tenantId;
     private BigDecimal cost;
     private String     description;
     private Long       brandId;
-
-    public void setProductStatusType(ProductStatusType productStatusType) {
-        this.productStatusTypeId = productStatusType.getValue();
-    }
 }

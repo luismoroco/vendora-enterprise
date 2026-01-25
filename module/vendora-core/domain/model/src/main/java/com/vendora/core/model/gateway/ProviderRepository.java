@@ -10,4 +10,10 @@ public interface ProviderRepository {
     Mono<Provider> findByRucAndTenantId(String ruc, Long tenantId);
 
     Mono<Boolean> existsByRucAndTenantId(String ruc, Long tenantId);
+
+    Mono<Boolean> existsByNameAndTenantId(String name, Long tenantId);
+
+    Mono<Provider> findByProviderIdAndTenantId(Long providerId, Long tenantId);
+
+    Mono<Boolean> existsByProviderIdAndTenantId(Long providerId, Long tenantId);
 }

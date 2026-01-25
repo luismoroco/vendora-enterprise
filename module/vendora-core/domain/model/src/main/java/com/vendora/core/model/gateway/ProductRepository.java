@@ -10,4 +10,8 @@ public interface ProductRepository {
     Mono<Product> findByBarCodeAndTenantId(String barCode, Long tenantId);
 
     Mono<Boolean> existsByBarCodeAndTenantId(String barCode, Long tenantId);
+
+    Mono<Boolean> existsByProductNameAndTenantId(String productName, Long tenantId);
+
+    Mono<Product> findByProductIdAndTenantId(Long productId, Long tenantId);
 }

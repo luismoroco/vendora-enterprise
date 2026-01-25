@@ -24,5 +24,10 @@ public class ProviderReactiveRepositoryAdapter extends ReactiveAdapterOperations
     public Mono<Boolean> existsByRucAndTenantId(String ruc, Long tenantId) {
         return this.repository.existsByRucAndTenantId(ruc, tenantId);
     }
+
+    @Override
+    public Mono<Boolean> existsByNameAndTenantId(String name, Long tenantId) {
+        return null;
+    }
 }
 
