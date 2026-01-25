@@ -26,5 +26,6 @@ public class ProductEntity {
     private Long tenantId;
     private BigDecimal cost;
     private String description;
+    private Long brandId;
 }
 

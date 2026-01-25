@@ -36,6 +36,8 @@ public class ProductUseCase {
                 .cost(dto.getCost())
                 .brandId(dto.getBrandId())
                 .providerId(dto.getProviderId())
+                .price(dto.getPrice())
+                .stock(dto.getStock())
                 .build()
           ));
     }

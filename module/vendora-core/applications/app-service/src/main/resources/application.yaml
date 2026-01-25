@@ -1,5 +1,9 @@
 server:
   port: 8080
+logging:
+  level:
+    root: "INFO"
+    com.vendora.core: "DEBUG"
 spring:
   config:
     import: "optional:file:.env[.properties]"
