@@ -1,6 +1,8 @@
 package com.vendora.core.usecase;
 
+import com.vendora.core.model.Brand;
 import com.vendora.core.model.Product;
+import com.vendora.core.model.Provider;
 import com.vendora.core.model.gateway.BrandRepository;
 import com.vendora.core.model.gateway.ProductRepository;
 import com.vendora.core.model.gateway.ProviderRepository;
@@ -14,6 +16,9 @@ import com.vendora.core.usecase.service.ProviderService;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class ProductUseCase {
@@ -156,7 +161,34 @@ public class ProductUseCase {
             dto.getProductStatusTypes(),
             dto.getPage(),
             dto.getPageSize()
-        );
+          )
+          .collectList()
+          .flatMapMany(products -> {
+              if (products.isEmpty()) {
+                  return Flux.empty();
+              }
+
+              return Mono.zip(
+                  this.providerRepository.findByProviderIdIn(
+                    products.stream().map(Product::getProviderId).distinct().toList()
+                  ).collectMap(Provider::getProviderId),
+
+                  this.brandRepository.findByBrandIdIn(
+                    products.stream().map(Product::getBrandId).distinct().toList()
+                  ).collectMap(Brand::getBrandId)
+                )
+                .flatMapMany(tuple -> {
+                    var providersMap = tuple.getT1();
+                    var brandsMap = tuple.getT2();
+
+                    products.forEach(product -> {
+                        product.setProvider(providersMap.get(product.getProviderId()));
+                        product.setBrand(brandsMap.get(product.getBrandId()));
+                    });
+
+                    return Flux.fromIterable(products);
+                });
+          });
     }
 
     public Mono<Integer> countProducts(GetProductsDTO dto) {

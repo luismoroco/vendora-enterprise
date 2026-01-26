@@ -1,7 +1,10 @@
 package com.vendora.core.model.gateway;
 
 import com.vendora.core.model.Brand;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 public interface BrandRepository {
 
@@ -16,4 +19,6 @@ public interface BrandRepository {
     Mono<Boolean> existsByBrandIdAndTenantId(Long brandId, Long tenantId);
 
     Mono<Brand> findByBrandId(Long brandId);
+
+    Flux<Brand> findByBrandIdIn(List<Long> brandIds);
 }

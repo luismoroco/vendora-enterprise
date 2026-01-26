@@ -6,7 +6,10 @@ import com.vendora.core.r2dbc.entity.BrandEntity;
 import com.vendora.core.r2dbc.helper.ReactiveAdapterOperations;
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @Repository
 public class BrandReactiveRepositoryAdapter extends ReactiveAdapterOperations<Brand, BrandEntity, Long, BrandReactiveRepository> implements BrandRepository {
@@ -38,5 +41,10 @@ public class BrandReactiveRepositoryAdapter extends ReactiveAdapterOperations<Br
   @Override
   public Mono<Brand> findByBrandId(Long brandId) {
     return this.repository.findById(brandId).map(this::toEntity);
+  }
+
+  @Override
+  public Flux<Brand> findByBrandIdIn(List<Long> brandIds) {
+    return this.repository.findAllById(brandIds).map(this::toEntity);
   }
 }

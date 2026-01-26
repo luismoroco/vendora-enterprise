@@ -6,7 +6,10 @@ import com.vendora.core.r2dbc.entity.ProviderEntity;
 import com.vendora.core.r2dbc.helper.ReactiveAdapterOperations;
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @Repository
 public class ProviderReactiveRepositoryAdapter extends ReactiveAdapterOperations<Provider, ProviderEntity, Long, ProviderReactiveRepository> implements ProviderRepository {
@@ -43,6 +46,11 @@ public class ProviderReactiveRepositoryAdapter extends ReactiveAdapterOperations
     @Override
     public Mono<Provider> findByProviderId(Long providerId) {
         return this.repository.findById(providerId).map(this::toEntity);
+    }
+
+    @Override
+    public Flux<Provider> findByProviderIdIn(List<Long> providerIds) {
+        return this.repository.findAllById(providerIds).map(this::toEntity);
     }
 }
 
