@@ -1,5 +1,6 @@
 package com.vendora.core.r2dbc.entity;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
@@ -12,11 +13,10 @@ import org.springframework.data.relational.core.mapping.Table;
 @Builder
 public class ProductCategoryEntity {
 
-    @Id
-    private Long    productCategoryId;
-    private String  name;
-    private Boolean featured;
-    private String  imageUrl;
-    private Long    tenantId;
+    @Id      private Long    productCategoryId;
+    @NotNull private String  name;
+    @NotNull private Boolean featured;
+    @NotNull private String  imageUrl;
+    @NotNull private Long    tenantId;
 }
 
