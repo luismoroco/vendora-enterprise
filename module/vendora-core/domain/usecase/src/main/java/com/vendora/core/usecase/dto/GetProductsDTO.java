@@ -13,13 +13,13 @@ import java.util.List;
 @ToString
 public class GetProductsDTO {
 
-    private Long tenantId;
-    private String name;
+    private Long                    tenantId;
+    private String                  name;
     private List<ProductStatusType> productStatusTypes;
-    private String barCode;
-    private List<Long> providerIds;
-    private List<Long> brandIds;
-    private List<Long> categoryIds;
-    private Integer page;
-    private Integer pageSize;
+    private String                  barCode;
+    private List<Long>              providerIds;
+    private List<Long>              brandIds;
+    private List<Long>              categoryIds;
+    private Integer                 page;
+    private Integer                 pageSize;
 }

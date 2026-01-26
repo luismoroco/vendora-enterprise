@@ -17,19 +17,19 @@ public class Product {
 
     public static final String TYPE = "Product";
 
-    private Long       productId;
-    private Long       providerId;
-    private String     name;
-    private String     barCode;
-    private BigDecimal price;
-    private Integer    stock;
+    private Long              productId;
+    private Long              providerId;
+    private String            name;
+    private String            barCode;
+    private BigDecimal        price;
+    private Integer           stock;
     private ProductStatusType productStatusType;
-    private String     imageUrl;
-    private Long       tenantId;
-    private BigDecimal cost;
-    private String     description;
-    private Long       brandId;
+    private String            imageUrl;
+    private Long              tenantId;
+    private BigDecimal        cost;
+    private String            description;
+    private Long              brandId;
 
-    private Provider   provider;
-    private Brand      brand;
+    private Provider          provider;
+    private Brand             brand;
 }

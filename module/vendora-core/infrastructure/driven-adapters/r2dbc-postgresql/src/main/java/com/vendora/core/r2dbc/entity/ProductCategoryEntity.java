@@ -13,10 +13,10 @@ import org.springframework.data.relational.core.mapping.Table;
 public class ProductCategoryEntity {
 
     @Id
-    private Long productCategoryId;
-    private String name;
+    private Long    productCategoryId;
+    private String  name;
     private Boolean featured;
-    private String imageUrl;
-    private Long tenantId;
+    private String  imageUrl;
+    private Long    tenantId;
 }
 

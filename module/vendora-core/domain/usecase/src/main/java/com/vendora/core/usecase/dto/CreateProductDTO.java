@@ -13,15 +13,15 @@ import java.math.BigDecimal;
 @ToString
 public class CreateProductDTO {
 
-    private Long       providerId;
-    private String     name;
-    private String     barCode;
-    private BigDecimal price;
-    private Integer    stock;
+    private Long              providerId;
+    private String            name;
+    private String            barCode;
+    private BigDecimal        price;
+    private Integer           stock;
     private ProductStatusType productStatusType;
-    private String     imageUrl;
-    private Long       tenantId;
-    private BigDecimal cost;
-    private String     description;
-    private Long       brandId;
+    private String            imageUrl;
+    private Long              tenantId;
+    private BigDecimal        cost;
+    private String            description;
+    private Long              brandId;
 }

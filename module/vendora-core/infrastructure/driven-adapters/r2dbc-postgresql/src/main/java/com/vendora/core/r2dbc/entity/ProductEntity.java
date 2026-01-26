@@ -16,18 +16,18 @@ import java.math.BigDecimal;
 public class ProductEntity {
 
     @Id
-    private Long productId;
-    private Long providerId;
-    private String name;
-    private String barCode;
-    private BigDecimal price;
-    private Integer stock;
-    private String productStatusType;
-    private String imageUrl;
-    private Long tenantId;
-    private BigDecimal cost;
-    private String description;
-    private Long brandId;
+    private Long        productId;
+    private Long        providerId;
+    private String      name;
+    private String      barCode;
+    private BigDecimal  price;
+    private Integer     stock;
+    private String      productStatusType;
+    private String      imageUrl;
+    private Long        tenantId;
+    private BigDecimal  cost;
+    private String      description;
+    private Long        brandId;
 
     @Transient
     private ProviderEntity provider;

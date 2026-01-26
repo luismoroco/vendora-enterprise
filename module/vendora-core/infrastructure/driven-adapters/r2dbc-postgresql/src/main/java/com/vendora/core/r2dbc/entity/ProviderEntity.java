@@ -13,11 +13,11 @@ import org.springframework.data.relational.core.mapping.Table;
 public class ProviderEntity {
 
     @Id
-    private Long providerId;
+    private Long   providerId;
     private String name;
     private String ruc;
     private String phone;
     private String email;
-    private Long tenantId;
+    private Long   tenantId;
 }
 
