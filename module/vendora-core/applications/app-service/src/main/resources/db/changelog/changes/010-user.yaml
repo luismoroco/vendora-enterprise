@@ -1,0 +1,68 @@
+databaseChangeLog:
+  - changeSet:
+      id: users
+      author: vendora.dev
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: user_id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: first_name
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_name
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: TEXT
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: password
+                  type: TEXT
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: tenant_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+        - sql:
+            dbms: postgresql
+            sql: |
+              ALTER TABLE users
+              ADD CONSTRAINT check_tenant_name_length
+                CHECK (char_length(email) > 1) NOT VALID;
+
+        - sql:
+            dbms: postgresql
+            sql: |
+              CREATE TRIGGER update_users_updated_at
+              BEFORE UPDATE ON users
+              FOR EACH ROW
+              EXECUTE FUNCTION update_updated_at_column();
