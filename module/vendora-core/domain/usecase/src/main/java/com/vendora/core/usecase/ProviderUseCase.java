@@ -15,7 +15,7 @@ public class ProviderUseCase {
     private final ProviderService service;
 
     public Mono<Provider> createProvider(CreateProviderDTO dto) {
-        return this.service.verifyProviderNameUniquenessWithinTenantOrThrow(dto.getName(), dto.getTenantId())
+        return this.service.requireProviderNameUniqueness(dto.getName(), dto.getTenantId())
             .then(this.repository.save(
                 Provider.builder()
                     .name(dto.getName())
@@ -33,7 +33,7 @@ public class ProviderUseCase {
                 Mono.justOrEmpty(dto.getName())
                     .filter(name -> !name.equals(provider.getName()))
                     .flatMap(name ->
-                        this.service.verifyProviderNameUniquenessWithinTenantOrThrow(name, dto.getTenantId())
+                        this.service.requireProviderNameUniqueness(name, dto.getTenantId())
                             .doOnSuccess(__ -> provider.setName(name))
                             .thenReturn(provider)
                     )

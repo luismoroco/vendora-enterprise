@@ -2,6 +2,7 @@ package com.vendora.core.api;
 
 import com.vendora.common.Paginator;
 import com.vendora.core.model.Product;
+import com.vendora.core.model.ProductStatusType;
 import com.vendora.core.usecase.ProductUseCase;
 import com.vendora.core.usecase.dto.CreateProductDTO;
 import com.vendora.core.usecase.dto.GetProductDTO;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
+
+import java.util.Collections;
 
 @Component
 @RequiredArgsConstructor
@@ -70,6 +73,9 @@ public class ProductHandler {
     public Mono<ServerResponse> getProducts(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(GetProductsDTO.class)
             .map(request -> {
+                // TODO: Create an base class for managing pathVariables and queryParams
+                var queryParams = serverRequest.queryParams();
+
                 request.setPage(serverRequest.queryParam(Paginator.PAGE_PARAM)
                     .map(Integer::valueOf)
                     .orElse(Paginator.DEFAULT_PAGE));
@@ -77,6 +83,13 @@ public class ProductHandler {
                 request.setPageSize(serverRequest.queryParam(Paginator.PAGE_SIZE_PARAM)
                     .map(Integer::valueOf)
                     .orElse(Paginator.DEFAULT_PAGE_SIZE));
+
+                request.setName(serverRequest.queryParam(NAME_PARAM).orElse(null));
+                request.setBarCode(serverRequest.queryParam(BAR_CODE_PARAM).orElse(null));
+                request.setProductStatusTypes(queryParams.getOrDefault(PRODUCT_STATUS_TYPES_PARAM, Collections.emptyList()).stream().map(ProductStatusType::valueOf).toList());
+                request.setProviderIds(queryParams.getOrDefault(PROVIDER_IDS_PARAM, Collections.emptyList()).stream().map(Long::valueOf).toList());
+                request.setBrandIds(queryParams.getOrDefault(BRAND_IDS_PARAM, Collections.emptyList()).stream().map(Long::valueOf).toList());
+                request.setCategoryIds(queryParams.getOrDefault(CATEGORY_IDS_PARAM, Collections.emptyList()).stream().map(Long::valueOf).toList());
 
                 return request;
             })
