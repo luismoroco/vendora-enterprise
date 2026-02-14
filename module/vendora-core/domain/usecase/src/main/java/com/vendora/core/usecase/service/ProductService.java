@@ -68,7 +68,7 @@ public class ProductService {
     }
 
     /**
-     * Validation - Instance methods
+     * Validators
      * */
 
     public Mono<Void> verifyNameConstraints(String productName, Long tenantId) {
