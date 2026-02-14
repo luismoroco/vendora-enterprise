@@ -18,7 +18,11 @@ public class UserService {
             .switchIfEmpty(Mono.error(new NotFoundException(LogCatalog.ENTITY_NOT_FOUND.of(User.TYPE))));
     }
 
-    public Mono<Void> verifyEmailAndTenantIdUniqueness(String email, Long tenantId) {
+    /**
+     * Validation
+     * */
+
+    public Mono<Void> verifyEmailConstraints(String email, Long tenantId) {
         return this.repository.existsByEmailAndTenantId(email, tenantId)
             .flatMap(flag -> flag.equals(Boolean.TRUE)
                 ? Mono.error(new BadRequestException(LogCatalog.ENTITY_ALREADY_EXISTS.of(User.TYPE)))

@@ -19,7 +19,7 @@ public class UserUseCase {
                 Mono.justOrEmpty(dto.getEmail())
                     .filter(email -> !email.equals(user.getEmail()))
                     .flatMap(email ->
-                        this.service.verifyEmailAndTenantIdUniqueness(email, dto.getTenantId())
+                        this.service.verifyEmailConstraints(email, dto.getTenantId())
                             .doOnSuccess(__ -> user.setEmail(email))
                             .thenReturn(user)
                     )

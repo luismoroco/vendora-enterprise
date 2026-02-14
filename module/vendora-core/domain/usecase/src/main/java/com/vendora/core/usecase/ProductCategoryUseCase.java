@@ -15,7 +15,7 @@ public class ProductCategoryUseCase {
     private final ProductCategoryService service;
 
     public Mono<ProductCategory> createProductCategory(CreateProductCategoryDTO dto) {
-        return this.service.verifyProductCategoryNameAndTenanIdUniqueness(dto.getName(), dto.getTenantId())
+        return this.service.verifyNameConstraints(dto.getName(), dto.getTenantId())
             .then(this.repository.save(
                 ProductCategory.builder()
                     .name(dto.getName())
@@ -32,7 +32,7 @@ public class ProductCategoryUseCase {
                 Mono.justOrEmpty(dto.getName())
                     .filter(name -> !name.equals(productCategory.getName()))
                     .flatMap(name ->
-                        this.service.verifyProductCategoryNameAndTenanIdUniqueness(name, dto.getTenantId())
+                        this.service.verifyNameConstraints(name, dto.getTenantId())
                             .doOnSuccess(__ -> productCategory.setName(name))
                             .thenReturn(productCategory)
                     )

@@ -15,7 +15,7 @@ public class TenantUseCase {
     private final TenantService service;
 
     public Mono<Tenant> createTenant(CreateTenantDTO dto) {
-        return this.service.verifyTenantNameUniquenessOrThrow(dto.getName())
+        return this.service.verifyNameConstraints(dto.getName())
             .then(this.repository.save(
                 Tenant.builder()
                     .name(dto.getName())
@@ -30,7 +30,7 @@ public class TenantUseCase {
                 Mono.justOrEmpty(dto.getName())
                     .filter(name -> !name.equals(tenant.getName()))
                     .flatMap(name ->
-                        this.service.verifyTenantNameUniquenessOrThrow(name)
+                        this.service.verifyNameConstraints(name)
                             .doOnSuccess(__ -> tenant.setName(name))
                             .thenReturn(tenant)
                     )
@@ -40,7 +40,7 @@ public class TenantUseCase {
                 Mono.justOrEmpty(dto.getDomain())
                     .filter(domain -> !domain.equals(tenant.getDomain()))
                     .flatMap(domain ->
-                        this.service.verifyDomainUniquenessOrThrow(domain)
+                        this.service.verifyDomainConstraints(domain)
                             .thenReturn(domain)
                     )
                     .doOnNext(tenant::setDomain)

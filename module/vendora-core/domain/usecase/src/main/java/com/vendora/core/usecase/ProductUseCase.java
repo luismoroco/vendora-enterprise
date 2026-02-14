@@ -10,9 +10,7 @@ import com.vendora.core.usecase.dto.CreateProductDTO;
 import com.vendora.core.usecase.dto.GetProductDTO;
 import com.vendora.core.usecase.dto.GetProductsDTO;
 import com.vendora.core.usecase.dto.UpdateProductDTO;
-import com.vendora.core.usecase.service.BrandService;
 import com.vendora.core.usecase.service.ProductService;
-import com.vendora.core.usecase.service.ProviderService;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -22,16 +20,14 @@ public class ProductUseCase {
 
     private final ProductRepository repository;
     private final ProductService service;
-    private final ProviderService providerService;
-    private final BrandService brandService;
     private final ProviderRepository providerRepository;
     private final BrandRepository brandRepository;
 
     public Mono<Product> createProduct(CreateProductDTO dto) {
-        return this.service.verifyProductNameUniquenessWithinTenantOrThrow(dto.getName(), dto.getTenantId())
-            .then(this.service.verifyBarCodeUniquenessWithinTenantOrThrow(dto.getBarCode(), dto.getTenantId()))
-            .then(this.providerService.existsByProviderIdAndTenantIdOrThrow(dto.getProviderId(), dto.getTenantId()))
-            .then(this.brandService.existsByBrandIdAndTenantIdOrThrow(dto.getBrandId(), dto.getTenantId()))
+        return this.service.verifyNameConstraints(dto.getName(), dto.getTenantId())
+            .then(this.service.verifyBarCodeConstraints(dto.getBarCode(), dto.getTenantId()))
+            .then(this.service.verifyProviderConstraints(dto.getProviderId(), dto.getTenantId()))
+            .then(this.service.verifyBrandConstraints(dto.getBrandId(), dto.getTenantId()))
             .then(this.repository.save(
                 Product.builder()
                     .name(dto.getName())
@@ -57,7 +53,7 @@ public class ProductUseCase {
                 Mono.justOrEmpty(dto.getName())
                     .filter(name -> !name.equals(product.getName()))
                     .flatMap(name ->
-                        this.service.verifyProductNameUniquenessWithinTenantOrThrow(name, dto.getTenantId())
+                        this.service.verifyNameConstraints(name, dto.getTenantId())
                             .doOnSuccess(__ -> product.setName(name))
                             .thenReturn(product)
                     )
@@ -67,7 +63,7 @@ public class ProductUseCase {
                 Mono.justOrEmpty(dto.getBarCode())
                     .filter(barCode -> !barCode.equals(product.getBarCode()))
                     .flatMap(barCode ->
-                        this.service.verifyBarCodeUniquenessWithinTenantOrThrow(barCode, dto.getTenantId())
+                        this.service.verifyBarCodeConstraints(barCode, dto.getTenantId())
                             .doOnSuccess(__ -> product.setBarCode(barCode))
                             .thenReturn(product)
                     )
@@ -77,7 +73,7 @@ public class ProductUseCase {
                 Mono.justOrEmpty(dto.getProviderId())
                     .filter(providerId -> !providerId.equals(product.getProviderId()))
                     .flatMap(providerId ->
-                        this.providerService.existsByProviderIdAndTenantIdOrThrow(providerId, dto.getTenantId())
+                        this.service.verifyProviderConstraints(providerId, dto.getTenantId())
                             .doOnSuccess(__ -> product.setProviderId(providerId))
                             .thenReturn(product)
                     )
@@ -87,7 +83,7 @@ public class ProductUseCase {
                 Mono.justOrEmpty(dto.getBrandId())
                     .filter(brandId -> !brandId.equals(product.getBrandId()))
                     .flatMap(brandId ->
-                        this.brandService.existsByBrandIdAndTenantIdOrThrow(brandId, dto.getTenantId())
+                        this.service.verifyBrandConstraints(brandId, dto.getTenantId())
                             .doOnSuccess(__ -> product.setBrandId(brandId))
                             .thenReturn(product)
                     )

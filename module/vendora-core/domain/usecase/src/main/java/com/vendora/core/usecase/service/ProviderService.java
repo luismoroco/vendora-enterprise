@@ -12,24 +12,28 @@ public class ProviderService {
 
     private final ProviderRepository repository;
 
-    public Mono<Void> requireProviderNameUniqueness(String name, Long tenantId) {
-        return this.repository.existsByNameAndTenantId(name, tenantId)
-            .flatMap(flag -> flag.equals(Boolean.TRUE)
-                ? Mono.error(new BadRequestException(LogCatalog.ENTITY_ALREADY_EXISTS.of(Provider.TYPE)))
-                : Mono.empty()
-            );
-    }
-
     public Mono<Provider> getByProviderIdAndTenantId(Long providerId, Long tenantId) {
         return this.repository.findByProviderIdAndTenantId(providerId, tenantId)
             .switchIfEmpty(Mono.error(new BadRequestException(LogCatalog.ENTITY_NOT_FOUND.of(Provider.TYPE))));
     }
 
-    public Mono<Void> existsByProviderIdAndTenantIdOrThrow(Long providerId, Long tenantId) {
+    public Mono<Void> verifyProviderExists(Long providerId, Long tenantId) {
         return this.repository.existsByProviderIdAndTenantId(providerId, tenantId)
-            .flatMap(flag -> !flag.equals(Boolean.TRUE)
-                ? Mono.error(new BadRequestException(LogCatalog.ENTITY_NOT_FOUND.of(Provider.TYPE)))
-                : Mono.empty()
-            );
+          .flatMap(flag -> !flag.equals(Boolean.TRUE)
+            ? Mono.error(new BadRequestException(LogCatalog.ENTITY_NOT_FOUND.of(Provider.TYPE)))
+            : Mono.empty()
+          );
+    }
+
+    /**
+     * Validation
+     * */
+
+    public Mono<Void> verifyNameConstraints(String name, Long tenantId) {
+        return this.repository.existsByNameAndTenantId(name, tenantId)
+          .flatMap(flag -> flag.equals(Boolean.TRUE)
+            ? Mono.error(new BadRequestException(LogCatalog.ENTITY_ALREADY_EXISTS.of(Provider.TYPE)))
+            : Mono.empty()
+          );
     }
 }

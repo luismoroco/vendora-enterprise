@@ -12,7 +12,7 @@ public class ProductCategoryService {
 
     private final ProductCategoryRepository repository;
 
-    public Mono<Void> verifyProductCategoryNameAndTenanIdUniqueness(String name, Long tenantId) {
+    public Mono<Void> verifyNameConstraints(String name, Long tenantId) {
         return this.repository.existsByNameAndTenantId(name, tenantId)
             .flatMap(flag -> flag.equals(Boolean.TRUE)
                 ? Mono.error(new BadRequestException(LogCatalog.ENTITY_ALREADY_EXISTS.of(ProductCategory.TYPE)))
