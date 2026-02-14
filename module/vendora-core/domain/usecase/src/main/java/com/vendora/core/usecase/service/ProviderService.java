@@ -19,10 +19,10 @@ public class ProviderService {
 
     public Mono<Void> verifyProviderExists(Long providerId, Long tenantId) {
         return this.repository.existsByProviderIdAndTenantId(providerId, tenantId)
-          .flatMap(flag -> !flag.equals(Boolean.TRUE)
-            ? Mono.error(new BadRequestException(LogCatalog.ENTITY_NOT_FOUND.of(Provider.TYPE)))
-            : Mono.empty()
-          );
+            .flatMap(flag -> !flag.equals(Boolean.TRUE)
+                ? Mono.error(new BadRequestException(LogCatalog.ENTITY_NOT_FOUND.of(Provider.TYPE)))
+                : Mono.empty()
+            );
     }
 
     /**
@@ -31,9 +31,9 @@ public class ProviderService {
 
     public Mono<Void> verifyNameConstraints(String name, Long tenantId) {
         return this.repository.existsByNameAndTenantId(name, tenantId)
-          .flatMap(flag -> flag.equals(Boolean.TRUE)
-            ? Mono.error(new BadRequestException(LogCatalog.ENTITY_ALREADY_EXISTS.of(Provider.TYPE)))
-            : Mono.empty()
-          );
+            .flatMap(flag -> flag.equals(Boolean.TRUE)
+                ? Mono.error(new BadRequestException(LogCatalog.ENTITY_ALREADY_EXISTS.of(Provider.TYPE)))
+                : Mono.empty()
+            );
     }
 }

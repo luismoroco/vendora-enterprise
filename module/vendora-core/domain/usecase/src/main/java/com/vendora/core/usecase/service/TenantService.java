@@ -23,17 +23,17 @@ public class TenantService {
 
     public Mono<Void> verifyNameConstraints(String name) {
         return this.repository.existsByName(name)
-          .flatMap(flag -> flag.equals(Boolean.TRUE)
-            ? Mono.error(new BadRequestException(LogCatalog.ENTITY_ALREADY_EXISTS.of(Tenant.TYPE)))
-            : Mono.empty()
-          );
+            .flatMap(flag -> flag.equals(Boolean.TRUE)
+                ? Mono.error(new BadRequestException(LogCatalog.ENTITY_ALREADY_EXISTS.of(Tenant.TYPE)))
+                : Mono.empty()
+            );
     }
 
     public Mono<Void> verifyDomainConstraints(String domain) {
         return this.repository.existsByDomain(domain)
-          .flatMap(flag -> flag.equals(Boolean.TRUE)
-            ? Mono.error(new BadRequestException(LogCatalog.ENTITY_ALREADY_EXISTS.of(Tenant.TYPE)))
-            : Mono.empty()
-          );
+            .flatMap(flag -> flag.equals(Boolean.TRUE)
+                ? Mono.error(new BadRequestException(LogCatalog.ENTITY_ALREADY_EXISTS.of(Tenant.TYPE)))
+                : Mono.empty()
+            );
     }
 }

@@ -16,7 +16,7 @@ public class ProductService {
 
     public Mono<Product> getByProductIdAndTenantId(Long productId, Long tenantId) {
         return this.repository.findByProductIdAndTenantId(productId, tenantId)
-          .switchIfEmpty(Mono.error(new BadRequestException(LogCatalog.ENTITY_NOT_FOUND.of(Product.TYPE))));
+            .switchIfEmpty(Mono.error(new BadRequestException(LogCatalog.ENTITY_NOT_FOUND.of(Product.TYPE))));
     }
 
     /**
@@ -25,18 +25,18 @@ public class ProductService {
 
     public Mono<Void> verifyNameConstraints(String productName, Long tenantId) {
         return this.repository.existsByProductNameAndTenantId(productName, tenantId)
-          .flatMap(flag -> flag.equals(Boolean.TRUE)
-            ? Mono.error(new BadRequestException(LogCatalog.ENTITY_ALREADY_EXISTS.of(Product.TYPE)))
-            : Mono.empty()
-          );
+            .flatMap(flag -> flag.equals(Boolean.TRUE)
+                ? Mono.error(new BadRequestException(LogCatalog.ENTITY_ALREADY_EXISTS.of(Product.TYPE)))
+                : Mono.empty()
+            );
     }
 
     public Mono<Void> verifyBarCodeConstraints(String barCode, Long tenantId) {
         return this.repository.existsByBarCodeAndTenantId(barCode, tenantId)
-          .flatMap(flag -> flag.equals(Boolean.TRUE)
-            ? Mono.error(new BadRequestException(LogCatalog.ENTITY_ALREADY_EXISTS.of(Product.TYPE)))
-            : Mono.empty()
-          );
+            .flatMap(flag -> flag.equals(Boolean.TRUE)
+                ? Mono.error(new BadRequestException(LogCatalog.ENTITY_ALREADY_EXISTS.of(Product.TYPE)))
+                : Mono.empty()
+            );
     }
 
     public Mono<Void> verifyProviderConstraints(Long providerId, Long tenantId) {

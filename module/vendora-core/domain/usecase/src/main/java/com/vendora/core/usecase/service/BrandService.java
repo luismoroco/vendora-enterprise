@@ -18,18 +18,22 @@ public class BrandService {
             .switchIfEmpty(Mono.error(new NotFoundException(LogCatalog.ENTITY_NOT_FOUND.of(Brand.TYPE))));
     }
 
-    public Mono<Void> verifyNameConstraints(String name, Long tenantId) {
-        return this.repository.existsByNameAndTenantId(name, tenantId)
-            .flatMap(flag -> flag.equals(Boolean.TRUE)
-                ? Mono.error(new BadRequestException(LogCatalog.ENTITY_ALREADY_EXISTS.of(Brand.TYPE)))
-                : Mono.empty()
-            );
-    }
-
     public Mono<Void> verifyBrandExists(Long brandId, Long tenantId) {
         return this.repository.existsByBrandIdAndTenantId(brandId, tenantId)
             .flatMap(flag -> flag.equals(Boolean.FALSE)
                 ? Mono.error(new BadRequestException(LogCatalog.ENTITY_NOT_FOUND.of(Brand.TYPE)))
+                : Mono.empty()
+            );
+    }
+
+    /**
+     * Validation
+     * */
+
+    public Mono<Void> verifyNameConstraints(String name, Long tenantId) {
+        return this.repository.existsByNameAndTenantId(name, tenantId)
+            .flatMap(flag -> flag.equals(Boolean.TRUE)
+                ? Mono.error(new BadRequestException(LogCatalog.ENTITY_ALREADY_EXISTS.of(Brand.TYPE)))
                 : Mono.empty()
             );
     }
