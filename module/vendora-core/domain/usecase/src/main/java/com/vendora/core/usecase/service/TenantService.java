@@ -30,8 +30,8 @@ public class TenantService {
 
     public Mono<Void> validateDTO(CreateTenantDTO dto) {
         return Mono.when(
-            verifyNameConstraints(dto.getName()),
-            verifyDomainConstraints(dto.getDomain())
+            this.verifyNameConstraints(dto.getName()),
+            this.verifyDomainConstraints(dto.getDomain())
         );
     }
 

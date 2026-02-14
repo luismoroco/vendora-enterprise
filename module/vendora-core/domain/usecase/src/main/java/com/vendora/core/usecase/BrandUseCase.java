@@ -15,26 +15,24 @@ public class BrandUseCase {
     private final BrandService service;
 
     public Mono<Brand> createBrand(CreateBrandDTO dto) {
-        return this.service.verifyNameConstraints(dto.getName(), dto.getTenantId())
+        return this.service.validateDTO(dto)
             .then(this.repository.save(
                 Brand.builder()
                     .name(dto.getName())
                     .imageUrl(dto.getImageUrl())
                     .tenantId(dto.getTenantId())
                     .build()
-          ));
+            ));
     }
 
     public Mono<Brand> updateBrand(UpdateBrandDTO dto) {
-        return this.service.getByBrandIdAndTenantId(dto.getBrandId(), dto.getTenantId())
+        return this.service.validateDTO(dto)
+            .then(this.service.getByBrandIdAndTenantId(dto.getBrandId(), dto.getTenantId()))
             .flatMap(brand ->
                 Mono.justOrEmpty(dto.getName())
                     .filter(name -> !name.equals(brand.getName()))
-                    .flatMap(name ->
-                        this.service.verifyNameConstraints(name, dto.getTenantId())
-                            .doOnSuccess(__ -> brand.setName(name))
-                            .thenReturn(brand)
-                    )
+                    .doOnNext(brand::setName)
+                    .thenReturn(brand)
                     .defaultIfEmpty(brand)
             )
             .flatMap(brand ->

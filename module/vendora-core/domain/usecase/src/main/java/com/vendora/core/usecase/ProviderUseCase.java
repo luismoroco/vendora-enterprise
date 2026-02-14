@@ -15,7 +15,7 @@ public class ProviderUseCase {
     private final ProviderService service;
 
     public Mono<Provider> createProvider(CreateProviderDTO dto) {
-        return this.service.verifyNameConstraints(dto.getName(), dto.getTenantId())
+        return this.service.validateDTO(dto)
             .then(this.repository.save(
                 Provider.builder()
                     .name(dto.getName())
@@ -28,15 +28,13 @@ public class ProviderUseCase {
     }
 
     public Mono<Provider> updateProvider(UpdateProviderDTO dto) {
-        return this.service.getByProviderIdAndTenantId(dto.getProviderId(), dto.getTenantId())
+        return this.service.validateDTO(dto)
+            .then(this.service.getByProviderIdAndTenantId(dto.getProviderId(), dto.getTenantId()))
             .flatMap(provider ->
                 Mono.justOrEmpty(dto.getName())
                     .filter(name -> !name.equals(provider.getName()))
-                    .flatMap(name ->
-                        this.service.verifyNameConstraints(name, dto.getTenantId())
-                            .doOnSuccess(__ -> provider.setName(name))
-                            .thenReturn(provider)
-                    )
+                    .doOnNext(provider::setName)
+                    .thenReturn(provider)
                     .defaultIfEmpty(provider)
             )
             .flatMap(provider ->

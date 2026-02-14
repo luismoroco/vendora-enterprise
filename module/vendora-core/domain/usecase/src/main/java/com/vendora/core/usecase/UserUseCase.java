@@ -14,15 +14,13 @@ public class UserUseCase {
     private final UserService service;
 
     public Mono<User> updateUser(UpdateUserDTO dto) {
-        return this.service.getByUserIdAndTenantId(dto.getUserId(), dto.getTenantId())
+        return this.service.validateDTO(dto)
+            .then(this.service.getByUserIdAndTenantId(dto.getUserId(), dto.getTenantId()))
             .flatMap(user ->
                 Mono.justOrEmpty(dto.getEmail())
                     .filter(email -> !email.equals(user.getEmail()))
-                    .flatMap(email ->
-                        this.service.verifyEmailConstraints(email, dto.getTenantId())
-                            .doOnSuccess(__ -> user.setEmail(email))
-                            .thenReturn(user)
-                    )
+                    .doOnNext(user::setEmail)
+                    .thenReturn(user)
                     .defaultIfEmpty(user)
             )
             .flatMap(user ->

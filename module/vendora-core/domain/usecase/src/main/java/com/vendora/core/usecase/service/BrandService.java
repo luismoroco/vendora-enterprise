@@ -39,7 +39,7 @@ public class BrandService {
 
     public Mono<Void> validateDTO(CreateBrandDTO dto) {
         return Mono.when(
-            verifyNameConstraints(dto.getName(), dto.getTenantId()),
+            this.verifyNameConstraints(dto.getName(), dto.getTenantId()),
             verifyImageUrlConstraints(dto.getImageUrl())
         );
     }
@@ -47,7 +47,7 @@ public class BrandService {
     public Mono<Void> validateDTO(UpdateBrandDTO dto) {
         return Mono.when(
             Mono.justOrEmpty(dto.getName())
-                .flatMap(name -> verifyNameConstraints(name, dto.getTenantId())),
+                .flatMap(name -> this.verifyNameConstraints(name, dto.getTenantId())),
             Mono.justOrEmpty(dto.getImageUrl())
                 .flatMap(BrandService::verifyImageUrlConstraints)
         );
