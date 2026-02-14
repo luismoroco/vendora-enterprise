@@ -16,6 +16,18 @@ import java.math.BigDecimal;
 public class Product {
 
     public static final String TYPE = "Product";
+    public static final String PRODUCT_ID = "productId";
+    public static final String PROVIDER_ID = "providerId";
+    public static final String NAME = "name";
+    public static final String BAR_CODE = "barCode";
+    public static final String PRICE = "price";
+    public static final String STOCK = "stock";
+    public static final String PRODUCT_STATUS_TYPE = "productStatusType";
+    public static final String IMAGE_URL = "imageUrl";
+    public static final String TENANT_ID = "tenantId";
+    public static final String COST = "cost";
+    public static final String DESCRIPTION = "description";
+    public static final String BRAND_ID = "brandId";
 
     private Long              productId;
     private Long              providerId;

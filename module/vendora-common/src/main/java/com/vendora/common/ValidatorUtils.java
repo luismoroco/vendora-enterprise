@@ -3,6 +3,8 @@ package com.vendora.common;
 import com.vendora.common.exc.ValidationException;
 import reactor.core.publisher.Mono;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
@@ -69,6 +71,17 @@ public class ValidatorUtils {
             }
 
             return Mono.empty();
+        }));
+    }
+
+    public static Mono<Void> uri(Object identifier, String value) {
+        return string(identifier, value).then(Mono.defer(() -> {
+            try {
+                new URI(value);
+                return Mono.empty();
+            } catch (URISyntaxException var3) {
+                return Mono.error(new ValidationException(LogCatalog.INVALID_PARAMETER.of(identifier, value)));
+            }
         }));
     }
 }

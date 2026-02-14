@@ -64,11 +64,11 @@
         {
           "name": "vendora-common-1.0.0.jar",
           "url": "vendora-common-1.0.0.jar",
-          "size": 10817,
-          "sha512": "a4ab07b33e3a2d47b02b5cf62788412b7e8f9a6c364effe731777325c45758f7c7555468263b89e6a0e77b53854d707a2bc8af785d841df0e277f31941a71eb3",
-          "sha256": "aeaa86027f83ab1a605a5e607f6a54b79211e8ea550a0714d7dbe1d046dfa3b7",
-          "sha1": "93466e29d1e312ae562140ab219c1703e9d5d49c",
-          "md5": "7e9875655ea73f880ede28e1be51835c"
+          "size": 18228,
+          "sha512": "b57ef8aab035b5b48d86f4d17c32ab1fe8832ad5f3c85b83ef53306fa99a94a13935c7c3272816e4b7288c92beaf4d076113a7613d415b0d2931b75eca9063e5",
+          "sha256": "cabefe3ce9d19f78acf24e762259d8b2d599ff77ec39a934bd5f41429eb10b10",
+          "sha1": "fa11a631f5dab037b9635b627f76c2bc2b3ea915",
+          "md5": "ee4e837739015ed7812565011d7e53a4"
         }
       ]
     },
@@ -143,11 +143,11 @@
         {
           "name": "vendora-common-1.0.0.jar",
           "url": "vendora-common-1.0.0.jar",
-          "size": 10817,
-          "sha512": "a4ab07b33e3a2d47b02b5cf62788412b7e8f9a6c364effe731777325c45758f7c7555468263b89e6a0e77b53854d707a2bc8af785d841df0e277f31941a71eb3",
-          "sha256": "aeaa86027f83ab1a605a5e607f6a54b79211e8ea550a0714d7dbe1d046dfa3b7",
-          "sha1": "93466e29d1e312ae562140ab219c1703e9d5d49c",
-          "md5": "7e9875655ea73f880ede28e1be51835c"
+          "size": 18228,
+          "sha512": "b57ef8aab035b5b48d86f4d17c32ab1fe8832ad5f3c85b83ef53306fa99a94a13935c7c3272816e4b7288c92beaf4d076113a7613d415b0d2931b75eca9063e5",
+          "sha256": "cabefe3ce9d19f78acf24e762259d8b2d599ff77ec39a934bd5f41429eb10b10",
+          "sha1": "fa11a631f5dab037b9635b627f76c2bc2b3ea915",
+          "md5": "ee4e837739015ed7812565011d7e53a4"
         }
       ]
     }

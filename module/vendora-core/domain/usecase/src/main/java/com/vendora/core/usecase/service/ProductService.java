@@ -1,6 +1,6 @@
 package com.vendora.core.usecase.service;
 
-import com.vendora.common.LogCatalog;
+import com.vendora.common.ValidatorUtils;
 import com.vendora.common.exc.BadRequestException;
 import com.vendora.core.model.Product;
 import com.vendora.core.model.gateway.ProductRepository;
@@ -10,9 +10,17 @@ import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Objects;
+
+import static com.vendora.common.LogCatalog.ENTITY_ALREADY_EXISTS;
+import static com.vendora.common.LogCatalog.ENTITY_NOT_FOUND;
+import static com.vendora.common.LogCatalog.INVALID_PARAMETER;
+import static com.vendora.core.model.Product.BAR_CODE;
+import static com.vendora.core.model.Product.COST;
+import static com.vendora.core.model.Product.DESCRIPTION;
+import static com.vendora.core.model.Product.IMAGE_URL;
+import static com.vendora.core.model.Product.NAME;
+import static com.vendora.core.model.Product.PRICE;
+import static com.vendora.core.model.Product.STOCK;
 
 @RequiredArgsConstructor
 public class ProductService {
@@ -23,7 +31,7 @@ public class ProductService {
 
     public Mono<Product> getByProductIdAndTenantId(Long productId, Long tenantId) {
         return this.repository.findByProductIdAndTenantId(productId, tenantId)
-            .switchIfEmpty(Mono.error(new BadRequestException(LogCatalog.ENTITY_NOT_FOUND.of(Product.TYPE))));
+            .switchIfEmpty(Mono.error(new BadRequestException(ENTITY_NOT_FOUND.of(Product.TYPE))));
     }
 
     /**
@@ -72,26 +80,22 @@ public class ProductService {
      * */
 
     public Mono<Void> verifyNameConstraints(String productName, Long tenantId) {
-        if (Objects.isNull(productName) || productName.isBlank()) {
-            return Mono.error(new BadRequestException(LogCatalog.INVALID_PARAMETER.of("name")));
-        }
-
-        return this.repository.existsByProductNameAndTenantId(productName, tenantId)
-            .flatMap(flag -> flag.equals(Boolean.TRUE)
-                ? Mono.error(new BadRequestException(LogCatalog.ENTITY_ALREADY_EXISTS.of(Product.TYPE)))
-                : Mono.empty()
+        return ValidatorUtils.string(NAME, productName)
+            .then(this.repository.existsByProductNameAndTenantId(productName, tenantId)
+                .flatMap(flag -> flag.equals(Boolean.TRUE)
+                    ? Mono.error(new BadRequestException(ENTITY_ALREADY_EXISTS.of(Product.TYPE)))
+                    : Mono.empty()
+                )
             );
     }
 
     public Mono<Void> verifyBarCodeConstraints(String barCode, Long tenantId) {
-        if (Objects.isNull(barCode) || barCode.isBlank()) {
-            return Mono.error(new BadRequestException(LogCatalog.INVALID_PARAMETER.of("barCode")));
-        }
-
-        return this.repository.existsByBarCodeAndTenantId(barCode, tenantId)
-            .flatMap(flag -> flag.equals(Boolean.TRUE)
-                ? Mono.error(new BadRequestException(LogCatalog.ENTITY_ALREADY_EXISTS.of(Product.TYPE)))
-                : Mono.empty()
+        return ValidatorUtils.string(BAR_CODE, barCode)
+            .then(this.repository.existsByBarCodeAndTenantId(barCode, tenantId)
+                .flatMap(flag -> flag.equals(Boolean.TRUE)
+                    ? Mono.error(new BadRequestException(ENTITY_ALREADY_EXISTS.of(Product.TYPE)))
+                    : Mono.empty()
+                )
             );
     }
 
@@ -104,42 +108,34 @@ public class ProductService {
     }
 
     public static Mono<Void> verifyPriceConstraints(BigDecimal price) {
-        if (Objects.isNull(price) || price.compareTo(BigDecimal.ZERO) <= 0) {
-            return Mono.error(new BadRequestException(LogCatalog.INVALID_PARAMETER.of("price")));
-        }
-        return Mono.empty();
+        return ValidatorUtils.nonNull(PRICE, price)
+            .then(Mono.defer(() -> price.compareTo(BigDecimal.ZERO) <= 0
+                ? Mono.error(new BadRequestException(INVALID_PARAMETER.of(PRICE)))
+                : Mono.empty()
+            ));
     }
 
     public static Mono<Void> verifyStockConstraints(Integer stock) {
-        if (Objects.isNull(stock) || stock < 0) {
-            return Mono.error(new BadRequestException(LogCatalog.INVALID_PARAMETER.of("stock")));
-        }
-        return Mono.empty();
+        return ValidatorUtils.nonNull(STOCK, stock)
+            .then(Mono.defer(() -> stock < 0
+                ? Mono.error(new BadRequestException(INVALID_PARAMETER.of(STOCK)))
+                : Mono.empty()
+            ));
     }
 
     public static Mono<Void> verifyCostConstraints(BigDecimal cost) {
-        if (Objects.isNull(cost) || cost.compareTo(BigDecimal.ZERO) < 0) {
-            return Mono.error(new BadRequestException(LogCatalog.INVALID_PARAMETER.of("cost")));
-        }
-        return Mono.empty();
+        return ValidatorUtils.nonNull(COST, cost)
+            .then(Mono.defer(() -> cost.compareTo(BigDecimal.ZERO) < 0
+                ? Mono.error(new BadRequestException(INVALID_PARAMETER.of(COST)))
+                : Mono.empty()
+            ));
     }
 
     public static Mono<Void> verifyImageUrlConstraints(String imageUrl) {
-        if (Objects.isNull(imageUrl) || imageUrl.isBlank()) {
-            return Mono.error(new BadRequestException(LogCatalog.INVALID_PARAMETER.of("imageUrl")));
-        }
-        try {
-            new URI(imageUrl);
-        } catch (URISyntaxException e) {
-            return Mono.error(new BadRequestException(LogCatalog.INVALID_PARAMETER.of("imageUrl")));
-        }
-        return Mono.empty();
+        return ValidatorUtils.uri(IMAGE_URL, imageUrl);
     }
 
     public static Mono<Void> verifyDescriptionConstraints(String description) {
-        if (Objects.isNull(description) || description.isBlank()) {
-            return Mono.error(new BadRequestException(LogCatalog.INVALID_PARAMETER.of("description")));
-        }
-        return Mono.empty();
+        return ValidatorUtils.string(DESCRIPTION, description);
     }
 }
