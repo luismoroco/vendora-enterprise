@@ -24,10 +24,7 @@ public class ProductUseCase {
     private final BrandRepository brandRepository;
 
     public Mono<Product> createProduct(CreateProductDTO dto) {
-        return this.service.verifyNameConstraints(dto.getName(), dto.getTenantId())
-            .then(this.service.verifyBarCodeConstraints(dto.getBarCode(), dto.getTenantId()))
-            .then(this.service.verifyProviderConstraints(dto.getProviderId(), dto.getTenantId()))
-            .then(this.service.verifyBrandConstraints(dto.getBrandId(), dto.getTenantId()))
+        return this.service.validateDTO(dto)
             .then(this.repository.save(
                 Product.builder()
                     .name(dto.getName())
