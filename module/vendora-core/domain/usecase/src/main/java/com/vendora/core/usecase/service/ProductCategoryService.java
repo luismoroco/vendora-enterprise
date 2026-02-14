@@ -12,7 +12,7 @@ public class ProductCategoryService {
 
     private final ProductCategoryRepository repository;
 
-    public Mono<Void> verifyProductCategoryNameUniquenessWithinTenantOrThrow(String name, Long tenantId) {
+    public Mono<Void> verifyProductCategoryNameAndTenanIdUniqueness(String name, Long tenantId) {
         return this.repository.existsByNameAndTenantId(name, tenantId)
             .flatMap(flag -> flag.equals(Boolean.TRUE)
                 ? Mono.error(new BadRequestException(LogCatalog.ENTITY_ALREADY_EXISTS.of(ProductCategory.TYPE)))
@@ -20,17 +20,9 @@ public class ProductCategoryService {
             );
     }
 
-    public Mono<ProductCategory> findByProductCategoryIdAndTenantIdOrThrow(Long productCategoryId, Long tenantId) {
+    public Mono<ProductCategory> getByProductCategoryIdAndTenantId(Long productCategoryId, Long tenantId) {
         return this.repository.findByProductCategoryIdAndTenantId(productCategoryId, tenantId)
             .switchIfEmpty(Mono.error(new BadRequestException(LogCatalog.ENTITY_NOT_FOUND.of(ProductCategory.TYPE))));
-    }
-
-    public Mono<Void> existsByProductCategoryIdAndTenantIdOrThrow(Long productCategoryId, Long tenantId) {
-        return this.repository.existsByProductCategoryIdAndTenantId(productCategoryId, tenantId)
-            .flatMap(flag -> !flag.equals(Boolean.TRUE)
-                ? Mono.error(new BadRequestException(LogCatalog.ENTITY_NOT_FOUND.of(ProductCategory.TYPE)))
-                : Mono.empty()
-            );
     }
 }
 

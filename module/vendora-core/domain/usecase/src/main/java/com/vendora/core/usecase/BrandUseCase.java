@@ -26,7 +26,7 @@ public class BrandUseCase {
     }
 
     public Mono<Brand> updateBrand(UpdateBrandDTO dto) {
-        return this.service.findByBrandIdAndTenantIdOrThrow(dto.getBrandId(), dto.getTenantId())
+        return this.service.getByBrandIdAndTenantId(dto.getBrandId(), dto.getTenantId())
             .flatMap(brand ->
                 Mono.justOrEmpty(dto.getName())
                     .filter(name -> !name.equals(brand.getName()))

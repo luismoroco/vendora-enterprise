@@ -25,7 +25,7 @@ public class TenantUseCase {
     }
 
     public Mono<Tenant> updateTenant(UpdateTenantDTO dto) {
-        return this.service.findByTenantIdOrThrow(dto.getTenantId())
+        return this.service.getByTenantId(dto.getTenantId())
             .flatMap(tenant ->
                 Mono.justOrEmpty(dto.getName())
                     .filter(name -> !name.equals(tenant.getName()))

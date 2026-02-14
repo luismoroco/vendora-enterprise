@@ -20,7 +20,7 @@ public class ProviderService {
             );
     }
 
-    public Mono<Provider> findByProviderIdAndTenantIdOrThrow(Long providerId, Long tenantId) {
+    public Mono<Provider> getByProviderIdAndTenantId(Long providerId, Long tenantId) {
         return this.repository.findByProviderIdAndTenantId(providerId, tenantId)
             .switchIfEmpty(Mono.error(new BadRequestException(LogCatalog.ENTITY_NOT_FOUND.of(Provider.TYPE))));
     }

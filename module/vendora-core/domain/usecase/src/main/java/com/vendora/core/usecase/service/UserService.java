@@ -13,23 +13,15 @@ public class UserService {
 
     private final UserRepository repository;
 
-    public Mono<User> findByUserIdAndTenantIdOrThrow(Long userId, Long tenantId) {
+    public Mono<User> getByUserIdAndTenantId(Long userId, Long tenantId) {
         return this.repository.findByUserIdAndTenantId(userId, tenantId)
             .switchIfEmpty(Mono.error(new NotFoundException(LogCatalog.ENTITY_NOT_FOUND.of(User.TYPE))));
     }
 
-    public Mono<Void> requireUniqueUserEmail(String email, Long tenantId) {
+    public Mono<Void> verifyEmailAndTenantIdUniqueness(String email, Long tenantId) {
         return this.repository.existsByEmailAndTenantId(email, tenantId)
             .flatMap(flag -> flag.equals(Boolean.TRUE)
                 ? Mono.error(new BadRequestException(LogCatalog.ENTITY_ALREADY_EXISTS.of(User.TYPE)))
-                : Mono.empty()
-            );
-    }
-
-    public Mono<Void> existsByUserIdAndTenantIdOrThrow(Long userId, Long tenantId) {
-        return this.repository.existsByUserIdAndTenantId(userId, tenantId)
-            .flatMap(flag -> flag.equals(Boolean.FALSE)
-                ? Mono.error(new BadRequestException(LogCatalog.ENTITY_NOT_FOUND.of(User.TYPE)))
                 : Mono.empty()
             );
     }

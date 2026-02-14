@@ -13,7 +13,7 @@ public class BrandService {
 
     private final BrandRepository repository;
 
-    public Mono<Brand> findByBrandIdAndTenantIdOrThrow(Long brandId, Long tenantId) {
+    public Mono<Brand> getByBrandIdAndTenantId(Long brandId, Long tenantId) {
         return this.repository.findByBrandIdAndTenantId(brandId, tenantId)
             .switchIfEmpty(Mono.error(new NotFoundException(LogCatalog.ENTITY_NOT_FOUND.of(Brand.TYPE))));
     }

@@ -28,7 +28,7 @@ public class ProviderUseCase {
     }
 
     public Mono<Provider> updateProvider(UpdateProviderDTO dto) {
-        return this.service.findByProviderIdAndTenantIdOrThrow(dto.getProviderId(), dto.getTenantId())
+        return this.service.getByProviderIdAndTenantId(dto.getProviderId(), dto.getTenantId())
             .flatMap(provider ->
                 Mono.justOrEmpty(dto.getName())
                     .filter(name -> !name.equals(provider.getName()))

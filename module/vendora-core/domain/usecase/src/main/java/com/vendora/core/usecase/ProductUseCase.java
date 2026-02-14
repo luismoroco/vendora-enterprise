@@ -52,7 +52,7 @@ public class ProductUseCase {
     }
 
     public Mono<Product> updateProduct(UpdateProductDTO dto) {
-        return this.service.findByProductIdAndTenantIdOrThrow(dto.getProductId(), dto.getTenantId())
+        return this.service.getByProductIdAndTenantId(dto.getProductId(), dto.getTenantId())
             .flatMap(product ->
                 Mono.justOrEmpty(dto.getName())
                     .filter(name -> !name.equals(product.getName()))
@@ -132,7 +132,7 @@ public class ProductUseCase {
     }
 
     public Mono<Product> getProduct(GetProductDTO dto) {
-        return this.service.findByProductIdAndTenantIdOrThrow(dto.getProductId(), dto.getTenantId())
+        return this.service.getByProductIdAndTenantId(dto.getProductId(), dto.getTenantId())
             .flatMap(product ->
                 Mono.zip(
                     this.providerRepository.findByProviderId(product.getProviderId()),

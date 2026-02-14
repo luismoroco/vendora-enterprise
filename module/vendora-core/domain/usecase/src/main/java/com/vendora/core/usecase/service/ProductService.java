@@ -28,7 +28,7 @@ public class ProductService {
             );
     }
 
-    public Mono<Product> findByProductIdAndTenantIdOrThrow(Long productId, Long tenantId) {
+    public Mono<Product> getByProductIdAndTenantId(Long productId, Long tenantId) {
         return this.repository.findByProductIdAndTenantId(productId, tenantId)
           .switchIfEmpty(Mono.error(new BadRequestException(LogCatalog.ENTITY_NOT_FOUND.of(Product.TYPE))));
     }

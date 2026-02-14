@@ -20,7 +20,7 @@ public class TenantService {
             );
     }
 
-    public Mono<Tenant> findByTenantIdOrThrow(Long tenantId) {
+    public Mono<Tenant> getByTenantId(Long tenantId) {
         return this.repository.findById(tenantId)
             .switchIfEmpty(Mono.error(new BadRequestException(LogCatalog.ENTITY_NOT_FOUND.of(Tenant.TYPE))));
     }
