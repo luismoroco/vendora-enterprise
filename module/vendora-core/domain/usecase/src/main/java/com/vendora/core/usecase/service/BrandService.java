@@ -5,11 +5,14 @@ import com.vendora.common.exc.BadRequestException;
 import com.vendora.common.exc.NotFoundException;
 import com.vendora.core.model.Brand;
 import com.vendora.core.model.gateway.BrandRepository;
+import com.vendora.core.usecase.dto.CreateBrandDTO;
+import com.vendora.core.usecase.dto.UpdateBrandDTO;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
 import static com.vendora.common.LogCatalog.ENTITY_ALREADY_EXISTS;
 import static com.vendora.common.LogCatalog.ENTITY_NOT_FOUND;
+import static com.vendora.core.model.Brand.IMAGE_URL;
 import static com.vendora.core.model.Brand.NAME;
 
 @RequiredArgsConstructor
@@ -31,6 +34,26 @@ public class BrandService {
     }
 
     /**
+     * DTO-level Validator
+     * */
+
+    public Mono<Void> validateDTO(CreateBrandDTO dto) {
+        return Mono.when(
+            verifyNameConstraints(dto.getName(), dto.getTenantId()),
+            verifyImageUrlConstraints(dto.getImageUrl())
+        );
+    }
+
+    public Mono<Void> validateDTO(UpdateBrandDTO dto) {
+        return Mono.when(
+            Mono.justOrEmpty(dto.getName())
+                .flatMap(name -> verifyNameConstraints(name, dto.getTenantId())),
+            Mono.justOrEmpty(dto.getImageUrl())
+                .flatMap(BrandService::verifyImageUrlConstraints)
+        );
+    }
+
+    /**
      * Validators
      * */
 
@@ -42,5 +65,9 @@ public class BrandService {
                     : Mono.empty()
                 )
             );
+    }
+
+    public static Mono<Void> verifyImageUrlConstraints(String imageUrl) {
+        return ValidatorUtils.uri(IMAGE_URL, imageUrl);
     }
 }

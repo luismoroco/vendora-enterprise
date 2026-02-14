@@ -4,6 +4,8 @@ import com.vendora.common.ValidatorUtils;
 import com.vendora.common.exc.BadRequestException;
 import com.vendora.core.model.Tenant;
 import com.vendora.core.model.gateway.TenantRepository;
+import com.vendora.core.usecase.dto.CreateTenantDTO;
+import com.vendora.core.usecase.dto.UpdateTenantDTO;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
@@ -20,6 +22,26 @@ public class TenantService {
     public Mono<Tenant> getByTenantId(Long tenantId) {
         return this.repository.findById(tenantId)
             .switchIfEmpty(Mono.error(new BadRequestException(ENTITY_NOT_FOUND.of(Tenant.TYPE))));
+    }
+
+    /**
+     * DTO-level Validator
+     * */
+
+    public Mono<Void> validateDTO(CreateTenantDTO dto) {
+        return Mono.when(
+            verifyNameConstraints(dto.getName()),
+            verifyDomainConstraints(dto.getDomain())
+        );
+    }
+
+    public Mono<Void> validateDTO(UpdateTenantDTO dto) {
+        return Mono.when(
+            Mono.justOrEmpty(dto.getName())
+                .flatMap(this::verifyNameConstraints),
+            Mono.justOrEmpty(dto.getDomain())
+                .flatMap(this::verifyDomainConstraints)
+        );
     }
 
     /**
