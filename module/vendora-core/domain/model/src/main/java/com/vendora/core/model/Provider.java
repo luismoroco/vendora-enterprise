@@ -14,6 +14,7 @@ import lombok.Setter;
 public class Provider {
 
     public static final String TYPE = "Provider";
+
     public static final String PROVIDER_ID = "providerId";
     public static final String NAME = "name";
     public static final String RUC = "ruc";

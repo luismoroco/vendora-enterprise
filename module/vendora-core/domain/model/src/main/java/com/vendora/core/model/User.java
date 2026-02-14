@@ -10,6 +10,7 @@ import lombok.*;
 public class User {
 
     public static final String TYPE = "User";
+
     public static final String USER_ID = "userId";
     public static final String FIRST_NAME = "firstName";
     public static final String LAST_NAME = "lastName";

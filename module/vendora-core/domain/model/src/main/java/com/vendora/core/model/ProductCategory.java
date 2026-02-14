@@ -14,6 +14,7 @@ import lombok.Setter;
 public class ProductCategory {
 
     public static final String TYPE = "ProductCategory";
+
     public static final String PRODUCT_CATEGORY_ID = "productCategoryId";
     public static final String NAME = "name";
     public static final String FEATURED = "featured";

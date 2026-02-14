@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 public class Product {
 
     public static final String TYPE = "Product";
+
     public static final String PRODUCT_ID = "productId";
     public static final String PROVIDER_ID = "providerId";
     public static final String NAME = "name";
