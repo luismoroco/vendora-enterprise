@@ -45,45 +45,34 @@ public class ProductUseCase {
     }
 
     public Mono<Product> updateProduct(UpdateProductDTO dto) {
-        return this.service.getByProductIdAndTenantId(dto.getProductId(), dto.getTenantId())
+        return this.service.validateDTO(dto)
+            .then(this.service.getByProductIdAndTenantId(dto.getProductId(), dto.getTenantId()))
             .flatMap(product ->
                 Mono.justOrEmpty(dto.getName())
                     .filter(name -> !name.equals(product.getName()))
-                    .flatMap(name ->
-                        this.service.verifyNameConstraints(name, dto.getTenantId())
-                            .doOnSuccess(__ -> product.setName(name))
-                            .thenReturn(product)
-                    )
+                    .doOnNext(product::setName)
+                    .thenReturn(product)
                     .defaultIfEmpty(product)
             )
             .flatMap(product ->
                 Mono.justOrEmpty(dto.getBarCode())
                     .filter(barCode -> !barCode.equals(product.getBarCode()))
-                    .flatMap(barCode ->
-                        this.service.verifyBarCodeConstraints(barCode, dto.getTenantId())
-                            .doOnSuccess(__ -> product.setBarCode(barCode))
-                            .thenReturn(product)
-                    )
+                    .doOnNext(product::setBarCode)
+                    .thenReturn(product)
                     .defaultIfEmpty(product)
             )
             .flatMap(product ->
                 Mono.justOrEmpty(dto.getProviderId())
                     .filter(providerId -> !providerId.equals(product.getProviderId()))
-                    .flatMap(providerId ->
-                        this.service.verifyProviderConstraints(providerId, dto.getTenantId())
-                            .doOnSuccess(__ -> product.setProviderId(providerId))
-                            .thenReturn(product)
-                    )
+                    .doOnNext(product::setProviderId)
+                    .thenReturn(product)
                     .defaultIfEmpty(product)
             )
             .flatMap(product ->
                 Mono.justOrEmpty(dto.getBrandId())
                     .filter(brandId -> !brandId.equals(product.getBrandId()))
-                    .flatMap(brandId ->
-                        this.service.verifyBrandConstraints(brandId, dto.getTenantId())
-                            .doOnSuccess(__ -> product.setBrandId(brandId))
-                            .thenReturn(product)
-                    )
+                    .doOnNext(product::setBrandId)
+                    .thenReturn(product)
                     .defaultIfEmpty(product)
             )
             .flatMap(product ->

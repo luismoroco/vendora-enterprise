@@ -9,6 +9,8 @@ import com.vendora.core.usecase.dto.UpdateProductDTO;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
+import java.math.BigDecimal;
+
 @RequiredArgsConstructor
 public class ProductService {
 
@@ -30,7 +32,12 @@ public class ProductService {
             this.verifyNameConstraints(dto.getName(), dto.getTenantId()),
             this.verifyBarCodeConstraints(dto.getBarCode(), dto.getTenantId()),
             this.verifyProviderConstraints(dto.getProviderId(), dto.getTenantId()),
-            this.verifyBrandConstraints(dto.getBrandId(), dto.getTenantId())
+            this.verifyBrandConstraints(dto.getBrandId(), dto.getTenantId()),
+            verifyPriceConstraints(dto.getPrice()),
+            verifyStockConstraints(dto.getStock()),
+            verifyCostConstraints(dto.getCost()),
+            verifyImageUrlConstraints(dto.getImageUrl()),
+            verifyDescriptionConstraints(dto.getDescription())
         );
     }
 
@@ -43,12 +50,22 @@ public class ProductService {
             Mono.justOrEmpty(dto.getProviderId())
                 .flatMap(providerId -> this.verifyProviderConstraints(providerId, dto.getTenantId())),
             Mono.justOrEmpty(dto.getBrandId())
-                .flatMap(brandId -> this.verifyBrandConstraints(brandId, dto.getTenantId()))
+                .flatMap(brandId -> this.verifyBrandConstraints(brandId, dto.getTenantId())),
+            Mono.justOrEmpty(dto.getPrice())
+                .flatMap(ProductService::verifyPriceConstraints),
+            Mono.justOrEmpty(dto.getStock())
+                .flatMap(ProductService::verifyStockConstraints),
+            Mono.justOrEmpty(dto.getCost())
+                .flatMap(ProductService::verifyCostConstraints),
+            Mono.justOrEmpty(dto.getImageUrl())
+                .flatMap(ProductService::verifyImageUrlConstraints),
+            Mono.justOrEmpty(dto.getDescription())
+                .flatMap(ProductService::verifyDescriptionConstraints)
         );
     }
 
     /**
-     * Validation
+     * Validation - Instance methods (require repository access)
      * */
 
     public Mono<Void> verifyNameConstraints(String productName, Long tenantId) {
@@ -74,4 +91,43 @@ public class ProductService {
     public Mono<Void> verifyBrandConstraints(Long brandId, Long tenantId) {
         return this.brandService.verifyBrandExists(brandId, tenantId);
     }
- }
+
+    /**
+     * Validation - Static methods (no repository access needed)
+     * */
+
+    public static Mono<Void> verifyPriceConstraints(BigDecimal price) {
+        if (price == null || price.compareTo(BigDecimal.ZERO) < 0) {
+            return Mono.error(new BadRequestException(LogCatalog.INVALID_PARAMETER.of("price")));
+        }
+        return Mono.empty();
+    }
+
+    public static Mono<Void> verifyStockConstraints(Integer stock) {
+        if (stock == null || stock < 0) {
+            return Mono.error(new BadRequestException(LogCatalog.INVALID_PARAMETER.of("stock")));
+        }
+        return Mono.empty();
+    }
+
+    public static Mono<Void> verifyCostConstraints(BigDecimal cost) {
+        if (cost == null || cost.compareTo(BigDecimal.ZERO) < 0) {
+            return Mono.error(new BadRequestException(LogCatalog.INVALID_PARAMETER.of("cost")));
+        }
+        return Mono.empty();
+    }
+
+    public static Mono<Void> verifyImageUrlConstraints(String imageUrl) {
+        if (imageUrl == null || imageUrl.isBlank()) {
+            return Mono.error(new BadRequestException(LogCatalog.INVALID_PARAMETER.of("imageUrl")));
+        }
+        return Mono.empty();
+    }
+
+    public static Mono<Void> verifyDescriptionConstraints(String description) {
+        if (description == null || description.isBlank()) {
+            return Mono.error(new BadRequestException(LogCatalog.INVALID_PARAMETER.of("description")));
+        }
+        return Mono.empty();
+    }
+}
